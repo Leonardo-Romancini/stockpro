@@ -1,14 +1,29 @@
 'use client'
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth, Usuario } from "../context/AuthContext";
 
 export default function LoginPage() {
 
     const router = useRouter();
+    const {login} = useAuth();
 
     const handleLogin = async (formData:FormData) => {
         const email = formData.get("email");
         const senha = formData.get("senha");
+
+        try{
+          //Validamos na API
+          const usuarioMock = new Usuario(1,"Leonardo Vieira");
+          const tokenMock = "jwt-uhgggggggggggggggggggwre9-gergregjwerigoweijgwo";
+
+          login(usuarioMock,tokenMock);
+
+
+        }catch{
+          alert("erro ao entrar no sistema!")
+        }
+
 
         console.log(`Autentica com email: ${email}`)
 

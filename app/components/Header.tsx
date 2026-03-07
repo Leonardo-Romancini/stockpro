@@ -1,6 +1,11 @@
 'use client';
 
+import { useAuth } from "../context/AuthContext";
+
 export default function Header(){
+
+  const{usuario,logout} = useAuth();
+
     return (
   <header className="w-full border-b border-blue-500/20 bg-zinc-950 sticky top-0 z-50 shadow-lg shadow-blue-900/10">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,7 +35,7 @@ export default function Header(){
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-bold text-white tracking-tight leading-none">
-                Leonardo Vieira
+                {usuario?.name.toLocaleUpperCase()||'Usuário indefinido!'}
               </span>
               <span className="text-[10px] uppercase tracking-[0.15em] font-black text-blue-500 mt-1">
                 Admin <span className="text-zinc-500 font-medium">| Painel de Estoque</span>
@@ -50,7 +55,7 @@ export default function Header(){
           <button 
             type="button"
             className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-red-600 hover:border-red-500 transition-all duration-300 active:scale-95 shadow-md"
-            onClick={() => console.log('Saindo...')}
+            onClick={logout}
           >
             <span className="text-xs font-bold uppercase tracking-widest hidden sm:inline">Sair</span>
             <svg 

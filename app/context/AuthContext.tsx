@@ -1,46 +1,73 @@
 'use client'
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { stringify } from "querystring";
+import { json } from "stream/consumers";
+import { useRouter } from "next/navigation";
 
-export class Usuario{
+export class Usuario {
     constructor(
         public codigo: number,
         public name: string
-    ){}
+    ) { }
 }
 
-interface AuthContextType{
-    usuario:Usuario | null,
+interface AuthContextType {
+    usuario: Usuario | null,
     token: string | null,
-    login:(usuario:Usuario, token:string)=>void,
-    logout:()=>void
+    login: (usuario: Usuario, token: string) => void,
+    logout: () => void
 }
 
-const AuthContext = createContext<AuthContextType|undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({children}: {children:ReactNode}){
+export function AuthProvider({ children }: { children: ReactNode }) {
 
-    const [usuario,setUsuario] = useState<Usuario|null>(null);
-    const [token,setToken] = useState<string|null>(null);
+    const [usuario, setUsuario] = useState<Usuario | null>(null);
+    const [token, setToken] = useState<string | null>(null);
+    const router = useRouter();
 
-    const login = (usuario:Usuario, token:string) =>{
+    useEffect(() => {
+        const usuarioRecover = Cookies.get('usuario');
+        const tokenRecover = Cookies.get('token');
+
+        if (usuarioRecover && tokenRecover) {
+            try {
+                setUsuario(JSON.parse(usuarioRecover));
+                setToken(tokenRecover);
+                router.push(window.location.pathname);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }, []);
+
+    const login = (usuario: Usuario, token: string) => {
+        debugger;
         setUsuario(usuario);
         setToken(token);
+        Cookies.set('usuario', JSON.stringify(usuario), { expires: 7 });
+        Cookies.set('token', token, { expires: 7, secure: true });
+
     }
 
-    const logout = () =>{
+    const logout = () => {
+
         setUsuario(null);
         setToken(null);
+        Cookies.remove('usuario');
+        Cookies.remove('token');
     }
 
-    return(
-    <AuthContext.Provider value={{usuario,token,login,logout}}>
-        {children}
-    </AuthContext.Provider>
+    return (
+        <AuthContext.Provider value={{ usuario, token, login, logout }}>
+            {children}
+        </AuthContext.Provider>
     )
 }
 
-export const useAuth = () =>{
+export const useAuth = () => {
     const contexto = useContext(AuthContext);
-    if(!contexto) throw new Error('useAuth deve ser usado dentro do provider!')
+    if (!contexto) throw new Error('useAuth deve ser usado dentro do provider!')
     return contexto;
 }
