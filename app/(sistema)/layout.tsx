@@ -12,7 +12,6 @@ export default function SistemaLayout({ children }: { children: React.ReactNode 
     const router = useRouter();
 
     useEffect(()=>{
-        debugger;
         if (usuario == null){
             router.push("/login")
         }
