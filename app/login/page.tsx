@@ -2,6 +2,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth, Usuario } from "../context/AuthContext";
+import axios from "axios";
+
+interface LoginResponse{
+  token: string
+}
 
 export default function LoginPage() {
 
@@ -13,21 +18,35 @@ export default function LoginPage() {
         const senha = formData.get("senha");
 
         try{
+
+          debugger;
+
+          // var loginResult = await fetch("http://localhost:8080/auth/login",{
+          //   method: 'POST',
+          //   headers:{
+          //     'Content-Type':'application/json'
+          //   },
+          //   body: JSON.stringify({email:email,senha:senha})
+          // });
+
+          var loginResult = await axios.post<LoginResponse>('http://localhost:8080/auth/login',{email:email,senha:senha})
+
+          if (loginResult.status !== 200){
+            alert("Usuário ou senha inválido!");
+            return;
+          } 
+
           //Validamos na API
-          const usuarioMock = new Usuario(1,"Leonardo Vieira","",true);
-          const tokenMock = "jwt-uhgggggggggggggggggggwre9-gergregjwerigoweijgwo";
+          const usuarioMock = new Usuario(1,"Leonardo Vieira","","ATIVO");
 
-          login(usuarioMock,tokenMock);
-
+          login(usuarioMock,loginResult.data.token);
+          router.push("/home")
+          console.log(`Autentica com email: ${email}`)
 
         }catch{
           alert("erro ao entrar no sistema!")
         }
 
-
-        console.log(`Autentica com email: ${email}`)
-
-        router.push("/home")
     }
 
 return (

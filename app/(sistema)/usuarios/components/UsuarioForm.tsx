@@ -2,6 +2,7 @@
 
 import { Usuario } from "@/app/context/AuthContext";
 import { UsuarioMock } from "@/app/mock/usuario";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,25 +13,28 @@ interface UsuarioFormProps {
 
 export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
 
-  const [usuario, setUsuario] = useState<Usuario>(usuarioExistente || new Usuario(0, '', '', true))
+  const [usuario, setUsuario] = useState<Usuario>(usuarioExistente || new Usuario(null, '', '', "ATIVO"))
   const router = useRouter();
 
 
-  const handleChange = (campo: 'nome' | 'cpf', valor: string) => {
+  {/* aplicar o Numer() ou parecidos para converter o tipo do valor*/}
+  const handleChange = (campo: 'nome' | 'email', valor: string) => {
     setUsuario(prev =>
       new Usuario(
-        prev.codigo,
-        campo === 'nome' ? valor : prev.name,
-        campo === 'cpf' ? valor : prev.CPF,
-        prev.ativo
+        prev.id,
+        campo === 'nome' ? valor : prev.nome,
+        campo === 'email' ? valor : prev.email,
+        prev.status
       )
     )
   }
 
   const handleSalvar = async (formData: FormData) => {
 
-      await UsuarioMock.salvar(usuario);
-    alert("Usuário salvo com sucesso!")
+     var dadosResult = await axios.post<number>('http://localhost:8080/usuarios',usuario)
+     if (dadosResult.status!==200){
+        alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
+     }
 
     router.push("/usuarios")
 
@@ -66,7 +70,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                 <input
                   type="text"
                   required
-                  value={usuario.name}
+                  value={usuario.nome}
                   onChange={(e) => handleChange('nome', e.target.value)}
                   placeholder="João da Silva Sauro"
                   className="w-full px-5 py-4 rounded-xl border-2 border-zinc-100 bg-white/50 focus:bg-white focus:border-blue-600 outline-none transition-all font-bold text-zinc-900 placeholder:text-zinc-300 shadow-sm"
@@ -76,14 +80,14 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
               {/* CAMPO: CPF */}
               <div className="space-y-2">
                 <label className="text-xs font-black text-zinc-700 uppercase tracking-widest ml-1">
-                  CPF
+                  EMAIL
                 </label>
                 <input
-                  type="text"
+                  type="email"
                   required
-                  value={usuario.CPF}
-                  onChange={(e) => handleChange('cpf', e.target.value)}
-                  placeholder="000.000.000-00"
+                  value={usuario.email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  placeholder="seu@email.com"
                   className="w-full px-5 py-4 rounded-xl border-2 border-zinc-100 bg-white/50 focus:bg-white focus:border-blue-600 outline-none transition-all font-bold text-zinc-900 placeholder:text-zinc-300 shadow-sm"
                 />
               </div>

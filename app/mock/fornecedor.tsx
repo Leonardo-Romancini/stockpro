@@ -46,5 +46,10 @@ export class FornecedorMock {
                     console.log(`Fornecedor de ID ${fornecedor.codigo} atualizado com sucesso!`)
                 }
             }
+
+            static async buscarPorId(codigo: Number): Promise<Fornecedor | undefined> {
+            
+                    return this.fornecedorDB.find(f => f.codigo === codigo)
+                }
  
 }

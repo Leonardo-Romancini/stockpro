@@ -2,6 +2,7 @@
 
 import { Usuario } from "@/app/context/AuthContext";
 import { UsuarioMock } from "@/app/mock/usuario";
+import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -14,8 +15,13 @@ export default function Usuarios() {
 
     const carregarDados = async () => {
         try {
-            const dados = await UsuarioMock.listarTodos();
-            setUsuarios(dados);
+            const dados = await axios.get<Usuario[]>('http://localhost:8080/usuarios');
+
+            if(dados.status!==200){
+                alert("Erro ao carregar dados!")
+            }
+
+            setUsuarios(dados.data);
         } catch (error) {
             console.error(error);
         }
@@ -24,7 +30,7 @@ export default function Usuarios() {
     const handlerAlterarStatus = async (usuario: Usuario) => {
         try {
             setUsuarios(usuariosAtuais => usuariosAtuais.map(u => 
-                u.codigo === usuario.codigo ? new Usuario(u.codigo, u.name, u.CPF, !u.ativo) : u
+                u.id === usuario.id ? new Usuario(u.id, u.nome, u.email, u.status) : u
             ));
         } catch (error) {
             alert("Erro ao alterar status do usuário!");
@@ -72,23 +78,23 @@ export default function Usuarios() {
                         </thead>
                         <tbody className="divide-y divide-zinc-200/50">
                             {usuarios.map((usuario) => (
-                                <tr key={usuario.codigo} className="hover:bg-white/50 transition-colors">
-                                    <td className="px-6 py-4 text-zinc-500 font-mono text-xs">#{usuario.codigo}</td>
-                                    <td className="px-6 py-4 text-zinc-900 font-bold text-sm uppercase italic tracking-tight">{usuario.name}</td>
-                                    <td className="px-6 py-4 text-zinc-600 text-sm font-medium">{usuario.CPF}</td>
+                                <tr key={usuario.id} className="hover:bg-white/50 transition-colors">
+                                    <td className="px-6 py-4 text-zinc-500 font-mono text-xs">#{usuario.id}</td>
+                                    <td className="px-6 py-4 text-zinc-900 font-bold text-sm uppercase italic tracking-tight">{usuario.nome}</td>
+                                    <td className="px-6 py-4 text-zinc-600 text-sm font-medium">{usuario.email}</td>
                                     <td className="px-6 py-4">
                                         <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase italic border ${
-                                            usuario.ativo 
+                                            usuario.status 
                                             ? 'bg-emerald-100 text-emerald-700 border-emerald-200' 
                                             : 'bg-zinc-200 text-zinc-600 border-zinc-300'
                                         }`}>
-                                            {usuario.ativo ? 'Ativo' : 'Inativo'}
+                                            {usuario.status ? 'Ativo' : 'Inativo'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center justify-center gap-3">
                                             <Link 
-                                                href={`/usuarios/${usuario.codigo}/editar`}
+                                                href={`/usuarios/${usuario.id}/editar`}
                                                 className="p-2 rounded-lg bg-white border border-zinc-200 text-zinc-600 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"
                                                 title="Editar Usuário"
                                             >
@@ -97,12 +103,12 @@ export default function Usuarios() {
                                             <button 
                                                 onClick={() => handlerAlterarStatus(usuario)}
                                                 className={`px-4 py-2 rounded-lg font-black text-[10px] uppercase tracking-tighter transition-all ${
-                                                    usuario.ativo 
+                                                    usuario.status 
                                                     ? 'bg-red-50 text-red-600 hover:bg-red-600 hover:text-white' 
                                                     : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white'
                                                 }`}
                                             >
-                                                {usuario.ativo ? 'Desativar' : 'Ativar'}
+                                                {usuario.status ? 'Desativar' : 'Ativar'}
                                             </button>
                                         </div>
                                     </td>
