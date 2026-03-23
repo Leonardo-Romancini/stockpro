@@ -14,7 +14,7 @@ export class UsuarioMock {
         return [...this.usuarioDB]
     }
 
-    static async salvar(usuario: Usuario): Promise<void> {
+    /*static async salvar(usuario: Usuario): Promise<void> {
 
         const indexExistente = this.usuarioDB.findIndex(u => u.id === usuario.id);
 
@@ -34,7 +34,7 @@ export class UsuarioMock {
 
             console.log(`Usuario de ID ${usuario.id} atualizado com sucesso!`)
         }
-    }
+    } */
 
     static async buscarPorId(codigo: Number): Promise<Usuario | undefined> {
 
