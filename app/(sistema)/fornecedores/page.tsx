@@ -1,3 +1,5 @@
+'use client'
+
 import FormFornece from "@/app/components/FormFornece";
 import { Fornecedor, FornecedorMock } from "@/app/mock/fornecedor";
 import Link from "next/link";
@@ -24,7 +26,7 @@ export default function Fornecedores() {
         const handlerAlterarStatus = async (fornecedor: Fornecedor) => {
                 try {
                     setFornecedores(fornecedoresAtuais => fornecedoresAtuais.map(f => 
-                        f.codigo === fornecedor.codigo ? new Fornecedor(f.codigo,f.rzsocial, f.nomef, f.CNPJ, f.email, !f.ativo) : f
+                        f.id === fornecedor.id ? new Fornecedor(f.id,f.rzsocial, f.nomef, f.CNPJ, f.email, f.status) : f
                     ));
                 } catch (error) {
                     alert("Erro ao alterar status do fornecedor!");
@@ -56,24 +58,24 @@ export default function Fornecedores() {
                     </thead>
                     <tbody>
                         {fornecedores.map((fornecedor) => (
-                            <tr key={fornecedor.codigo}>
-                                <td>#{fornecedor.codigo}</td>
+                            <tr key={fornecedor.id}>
+                                <td>#{fornecedor.id}</td>
                                 <td>{fornecedor.rzsocial}</td>
                                 <td>{fornecedor.nomef}</td>
                                 <td>{fornecedor.CNPJ}</td>
                                 <td>{fornecedor.email}</td>
                                 <td>
                                     <span>
-                                        {fornecedor.ativo ? 'Ativo' : 'Inativo'}
+                                        {fornecedor.status ? 'Ativo' : 'Inativo'}
                                     </span>
                                 </td>
                                 <td>
                                     <div>
-                                        <Link href={`/fornecedores/${fornecedor.codigo}/editar`}>
+                                        <Link href={`/fornecedores/${fornecedor.id}/editar`}>
                                             Editar
                                         </Link>
                                         <button onClick={() => handlerAlterarStatus(fornecedor)}>
-                                            {fornecedor.ativo ? 'Desativar' : 'Ativar'}
+                                            {fornecedor.status ? 'Desativar' : 'Ativar'}
                                         </button>
                                     </div>
                                 </td>
