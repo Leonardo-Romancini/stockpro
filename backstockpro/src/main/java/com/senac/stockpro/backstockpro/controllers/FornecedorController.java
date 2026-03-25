@@ -1,9 +1,7 @@
 package com.senac.stockpro.backstockpro.controllers;
 
 import com.senac.stockpro.backstockpro.model.entities.Fornecedor;
-import com.senac.stockpro.backstockpro.model.entities.Usuario;
 import com.senac.stockpro.backstockpro.model.repository.FornecedorRepository;
-import com.senac.stockpro.backstockpro.model.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
