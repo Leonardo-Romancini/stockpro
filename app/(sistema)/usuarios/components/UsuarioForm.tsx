@@ -17,7 +17,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
   const router = useRouter();
 
 
-  {/* aplicar o Numer() ou parecidos para converter o tipo do valor*/}
+  {/* aplicar o Numer() ou parecidos para converter o tipo do valor*/ }
   const handleChange = (campo: 'nome' | 'email', valor: string) => {
     setUsuario(prev =>
       new Usuario(
@@ -31,11 +31,21 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
 
   const handleSalvar = async (formData: FormData) => {
 
-     var dadosResult = await axios.post<number>('http://localhost:8080/usuarios',usuario)
-     if (dadosResult.status!==200){
-        alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
-     }
+    if (usuarioExistente) {
 
+      var dadosResult = await axios.put<number>('http://localhost:8080/usuarios/'+usuarioExistente.id, usuario)
+      if (dadosResult.status !== 200) {
+        return;
+      }
+      alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
+
+    } else {
+      var dadosResult = await axios.post<number>('http://localhost:8080/usuarios', usuario)
+      if (dadosResult.status !== 200) {
+        return;
+      }
+      alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
+    }
     router.push("/usuarios")
 
   }

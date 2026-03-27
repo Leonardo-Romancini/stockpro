@@ -28,10 +28,21 @@ export default function Usuarios() {
     }
 
     const handlerAlterarStatus = async (usuario: Usuario) => {
+        debugger
         try {
-            setUsuarios(usuariosAtuais => usuariosAtuais.map(u => 
-                u.id === usuario.id ? new Usuario(u.id, u.nome, u.email, u.status) : u
-            ));
+            var novoStatus ={};
+            if(usuario.status==="ATIVO"){
+                novoStatus = {status:"INATIVO"};
+            } else {
+                novoStatus = {status:"ATIVO"};
+            }
+            
+      var dadosResult = await axios.put<number>('http://localhost:8080/usuarios/'+usuario.id+'/AlterarStatus', novoStatus)
+      if (dadosResult.status !== 200) {
+        return;
+      }
+      alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
+      carregarDados();
         } catch (error) {
             alert("Erro ao alterar status do usuário!");
         }
@@ -84,11 +95,11 @@ export default function Usuarios() {
                                     <td className="px-6 py-4 text-zinc-600 text-sm font-medium">{usuario.email}</td>
                                     <td className="px-6 py-4">
                                         <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase italic border ${
-                                            usuario.status 
+                                            usuario.status === 'ATIVO'
                                             ? 'bg-emerald-100 text-emerald-700 border-emerald-200' 
                                             : 'bg-zinc-200 text-zinc-600 border-zinc-300'
                                         }`}>
-                                            {usuario.status ? 'Ativo' : 'Inativo'}
+                                            {usuario.status === 'ATIVO'? 'Ativo' : 'Inativo'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
@@ -103,12 +114,12 @@ export default function Usuarios() {
                                             <button 
                                                 onClick={() => handlerAlterarStatus(usuario)}
                                                 className={`px-4 py-2 rounded-lg font-black text-[10px] uppercase tracking-tighter transition-all ${
-                                                    usuario.status 
+                                                    usuario.status === 'ATIVO'
                                                     ? 'bg-red-50 text-red-600 hover:bg-red-600 hover:text-white' 
                                                     : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white'
                                                 }`}
                                             >
-                                                {usuario.status ? 'Desativar' : 'Ativar'}
+                                                {usuario.status  === 'ATIVO'? 'Desativar' : 'Ativar'}
                                             </button>
                                         </div>
                                     </td>
