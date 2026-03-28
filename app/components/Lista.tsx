@@ -37,7 +37,7 @@ export default function Listas({ endpoint, mostrarAcoes = false, editarHref }: L
     const novoStatusValue = item.status === "ATIVO" ? "INATIVO" : "ATIVO";
     const statusNovo = { status: novoStatusValue };
 
-    await axios.patch(`${endpoint}/${item.id}`, statusNovo);
+    await axios.put(`${endpoint}/${item.id}/AlterarStatus`, statusNovo);
 
     buscarDados();
   };
