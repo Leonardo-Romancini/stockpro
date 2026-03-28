@@ -1,9 +1,9 @@
-import Listas from "@/app/components/Listas";
+import Listas from "@/app/components/Lista";
 
 export default function Listagem() {
     return (
         <main>
-            <Listas></Listas>
+            <Listas endpoint="" mostrarAcoes={false}></Listas>
         </main>
     );
 }
