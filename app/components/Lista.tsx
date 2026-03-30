@@ -6,79 +6,51 @@ import Link from "next/link";
 import { useEffect, useState } from "react"
 
 interface ListasProps {
-  endpoint: string;
+  dados: any[];
   editarHref?: string;
   mostrarAcoes: boolean;
+  onAlterarStatus: (item: any) => void;
 }
-export default function Listas({ endpoint, mostrarAcoes = false, editarHref }: ListasProps) {
-  const [lista, setLista] = useState<any[]>([]);
-  // const [carregando, setCarregando] = useState(true);
+export default function Listas({ dados, onAlterarStatus, mostrarAcoes = false, editarHref }: ListasProps) {
 
-    useEffect(() => {
-    buscarDados(); 
-  }, [endpoint]);
-
-  const buscarDados = async () => {
-    try {
-      //setCarregando (true);
-      const resposta = await axios.get(endpoint);
-      setLista(resposta.data);
-
-      if (resposta.status !== 200) {
-        alert("Erro ao carregar dados!")
-      }
-
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const handlerAlterarStatus = async (item: any) => {
-    const novoStatusValue = item.status === "ATIVO" ? "INATIVO" : "ATIVO";
-    const statusNovo = { status: novoStatusValue };
-
-    await axios.put(`${endpoint}/${item.id}/AlterarStatus`, statusNovo);
-
-    buscarDados();
-  };
 
   //é o que pega o nome das colunas com o Object.keys sendo o responsável por isso, o [0] em lista é necessário para não retornar os indices ao invés dos nomes
-  const colunas = lista.length > 0 ? Object.keys(lista[0]) : []
+  const colunas = dados.length > 0 ? Object.keys(dados[0]) : []
 
   //os placeholder pra quando tá carregando
   //if (carregando) return <div>Carregando dados...</div>;
-  if (lista.length === 0) return <div>Nenhum registro encontrado.</div>;
+  if (dados.length === 0) return <div>Nenhum registro encontrado.</div>;
 
   return (
-  <table>
-    <thead>
-      <tr>
-        {colunas.map((col) => (
-          <th key={col}>{col}</th>
-        ))}
-        {mostrarAcoes && <th>Ações</th>}
-      </tr>
-    </thead>
-    <tbody>
-      {lista.map((item) => (
-        <tr key={item.id}>
+    <table>
+      <thead>
+        <tr>
           {colunas.map((col) => (
-            <td key={col}>{String(item[col])}</td>
+            <th key={col}>{col}</th>
           ))}
-
-          {mostrarAcoes && (
-            <td>
-              <Link href={`${editarHref}/${item.id}/editar`}>
-                Editar
-              </Link>
-              <button onClick={() => handlerAlterarStatus(item)}>
-                {item.status === 'ATIVO' ? 'Desativar' : 'Ativar'}
-              </button>
-            </td>
-          )}
+          {mostrarAcoes && <th>Ações</th>}
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody>
+        {dados.map((item) => (
+          <tr key={item.id}>
+            {colunas.map((col) => (
+              <td key={col}>{String(item[col])}</td>
+            ))}
+
+            {mostrarAcoes && (
+              <td>
+                <Link href={`${editarHref}/${item.id}/editar`}>
+                  Editar
+                </Link>
+                <button onClick={() => onAlterarStatus?.(item)}>
+                  {item.status === 'ATIVO' ? 'Desativar' : 'Ativar'}
+                </button>
+              </td>
+            )}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 export default function Usuarios() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
-    /*useEffect(() => {
+    useEffect(() => {
         carregarDados();
     }, []);
 
@@ -23,17 +23,17 @@ export default function Usuarios() {
         } catch (error) {
             console.error(error);
         }
-    }*/
+    }
 
     const handlerAlterarStatus = async (usuario: Usuario) => {
         try {
             const novoStatus = usuario.status === "ATIVO" ? { status: "INATIVO" } : { status: "ATIVO" };
             
-            const dadosResult = await axios.put<number>(`http://localhost:8080/usuarios/${usuario.id}/AlterarStatus`, novoStatus);
+            const dadosResult = await axios.put<string>(`http://localhost:8080/usuarios/${usuario.id}/AlterarStatus`, novoStatus);
             
             if (dadosResult.status === 200) {
-                alert("Usuário salvo com sucesso! Código: " + dadosResult.data);
-                /*carregarDados();*/
+                carregarDados();
+                alert(dadosResult.data);
             }
         } catch (error) {
             alert("Erro ao alterar status do usuário!");
@@ -52,7 +52,7 @@ export default function Usuarios() {
                     </Link>
                 </div>
 
-                <Listas endpoint='http://localhost:8080/usuarios' editarHref="usuarios" mostrarAcoes={true}></Listas>
+                <Listas dados={usuarios} onAlterarStatus={handlerAlterarStatus} editarHref="usuarios" mostrarAcoes={true}></Listas>
                { /*<table>
                     <thead>
                         <tr>
