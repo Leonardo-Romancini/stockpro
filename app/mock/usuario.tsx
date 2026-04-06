@@ -2,7 +2,7 @@ import { Usuario } from "../context/AuthContext";
 
 export class UsuarioMock {
 
-    private static usuarioDB: Usuario[] = [
+    /*private static usuarioDB: Usuario[] = [
         new Usuario(1, "Leonardo Vieira", "345246", ""),
         new Usuario(2, "Vieira Eonardo", "86578659", ""),
         new Usuario(3, "Lon ardo Eira", "6745756475", ""),
@@ -12,7 +12,7 @@ export class UsuarioMock {
 
     static async listarTodos(): Promise<Usuario[]> {
         return [...this.usuarioDB]
-    }
+    }*/
 
     /*static async salvar(usuario: Usuario): Promise<void> {
 
@@ -36,10 +36,10 @@ export class UsuarioMock {
         }
     } */
 
-    static async buscarPorId(codigo: Number): Promise<Usuario | undefined> {
+    /*static async buscarPorId(codigo: Number): Promise<Usuario | undefined> {
 
         return this.usuarioDB.find(u => u.id === codigo)
-    }
+    }*/
 
 
 }

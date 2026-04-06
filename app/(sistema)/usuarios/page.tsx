@@ -9,92 +9,51 @@ import { useEffect, useState } from "react";
 export default function Usuarios() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
-    useEffect(() => {
-        carregarDados();
-    }, []);
+    useEffect(() => { carregarDados(); }, []);
 
     const carregarDados = async () => {
         try {
             const dados = await axios.get<Usuario[]>('http://localhost:8080/usuarios');
-            if (dados.status !== 200) {
-                alert("Erro ao carregar dados!");
-            }
-            setUsuarios(dados.data);
-        } catch (error) {
-            console.error(error);
-        }
+            if (dados.status === 200) setUsuarios(dados.data);
+        } catch (error) { console.error(error); }
     }
 
     const handlerAlterarStatus = async (usuario: Usuario) => {
         try {
             const novoStatus = usuario.status === "ATIVO" ? { status: "INATIVO" } : { status: "ATIVO" };
-            
             const dadosResult = await axios.put<string>(`http://localhost:8080/usuarios/${usuario.id}/AlterarStatus`, novoStatus);
-            
-            if (dadosResult.status === 200) {
-                carregarDados();
-                alert(dadosResult.data);
-            }
-        } catch (error) {
-            alert("Erro ao alterar status do usuário!");
-        }
+            if (dadosResult.status === 200) carregarDados();
+        } catch (error) { alert("Erro ao alterar status!"); }
     }
 
     return (
-        <main>
-            <section>
-                <div>
-                    <h1>Gestão de Usuários</h1>
-                    <p>Controle de acessos e permissões do sistema</p>
+        <main className="min-h-screen flex flex-col font-sans antialiased bg-zinc-50">
+            <section className="flex-1 w-full max-w-7xl mx-auto px-6 py-12 space-y-8">
+                
+                <div className="w-full bg-zinc-950 rounded-[2rem] p-8 md:p-10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <h1 className="text-4xl font-black text-white uppercase italic tracking-tighter">
+                            Gestão de <span className="text-blue-500">Usuários</span>
+                        </h1>
+                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Acessos e Permissões</p>
+                    </div>
                     
-                    <Link href="/usuarios/novo">
+                    <Link 
+                        href="/usuarios/novo"
+                        className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase italic tracking-tighter text-sm rounded-xl shadow-lg border-2 border-blue-400/30 transition-all"
+                    >
                         + Novo Usuário
                     </Link>
                 </div>
 
-                <Listas dados={usuarios} onAlterarStatus={handlerAlterarStatus} editarHref="usuarios" mostrarAcoes={true}></Listas>
-               { /*<table>
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {usuarios.map((usuario) => (
-                            <tr key={usuario.id}>
-                                <td>#{usuario.id}</td>
-                                <td>{usuario.nome}</td>
-                                <td>{usuario.email}</td>
-                                <td>
-                                    <span>
-                                        {usuario.status === 'ATIVO' ? 'Ativo' : 'Inativo'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <Link href={`/usuarios/${usuario.id}/editar`}>
-                                        Editar
-                                    </Link>
-                                    
-                                    <button onClick={() => handlerAlterarStatus(usuario)}>
-                                        {usuario.status === 'ATIVO' ? 'Desativar' : 'Ativar'}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-
-                        {usuarios.length === 0 && (
-                            <tr>
-                                <td colSpan={5}>
-                                    Nenhum usuário encontrado no sistema.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>*/}
+                <div className="bg-white rounded-[2rem] border-2 border-zinc-200 shadow-sm overflow-hidden">
+                    <Listas 
+                        dados={usuarios} 
+                        onAlterarStatus={handlerAlterarStatus} 
+                        editarHref="usuarios" 
+                        mostrarAcoes={true} 
+                    />
+                </div>
             </section>
         </main>
     );

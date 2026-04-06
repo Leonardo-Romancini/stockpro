@@ -3,7 +3,7 @@ export class Fornecedor {
         public id: number|null,
         public rzsocial: string,
         public nomef: string,
-        public CNPJ: string,
+        public cnpj: string,
         public email: string,
         public status: string
     ) { }
