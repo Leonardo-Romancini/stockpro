@@ -21,6 +21,8 @@ public class Usuario {
 
     private String senha;
 
+    private String cnpj;
+
     private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
 
 

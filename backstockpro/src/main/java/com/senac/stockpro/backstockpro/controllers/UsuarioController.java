@@ -1,7 +1,7 @@
 package com.senac.stockpro.backstockpro.controllers;
 
 
-import com.senac.stockpro.backstockpro.model.DTO.AlterarStatusRequest;
+import com.senac.stockpro.backstockpro.model.DTO.AlterarStatusUsuarioRequest;
 import com.senac.stockpro.backstockpro.model.entities.Usuario;
 import com.senac.stockpro.backstockpro.model.repository.UsuarioRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +23,7 @@ public class UsuarioController {
     @GetMapping
     @Operation(description = "Realiza uma listagem de todos os usuários no banco", summary = "Listagem todos")
     public ResponseEntity<List<?>> listarTodos(){
-        return ResponseEntity.ok(usuarioRepository.findAll());
+        return ResponseEntity.ok(usuarioRepository.findAllByOrderByIdAsc());
     }
 
     @GetMapping("/{id}")
@@ -48,6 +48,7 @@ public class UsuarioController {
             usuarioBanco.setNome(usuario.getNome());
             usuarioBanco.setSenha(usuario.getSenha());
             usuarioBanco.setStatus(usuario.getStatus());
+            usuarioBanco.setCnpj(usuario.getCnpj());
             return ResponseEntity.ok("Atualizado com sucesso");
         }
 
@@ -55,7 +56,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}/AlterarStatus")
-    public ResponseEntity<?> AlterarStatus(@PathVariable Long id, @RequestBody AlterarStatusRequest statusRequest){
+    @Operation(description = "Realiza a alteração do status do usuário para ATIVO ou INATIVO", summary = "Altera status")
+    public ResponseEntity<?> AlterarStatus(@PathVariable Long id, @RequestBody AlterarStatusUsuarioRequest statusRequest){
         var usuarioBanco = usuarioRepository.findById(id).orElse(null);
         if (usuarioBanco != null) {
             usuarioBanco.setStatus(statusRequest.status());

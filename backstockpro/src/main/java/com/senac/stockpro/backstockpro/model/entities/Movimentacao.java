@@ -1,29 +1,27 @@
 package com.senac.stockpro.backstockpro.model.entities;
 
-import com.senac.stockpro.backstockpro.model.enuns.EnumStatusFornecedor;
+import com.senac.stockpro.backstockpro.model.enuns.EnumMovimentacao;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "fornecedor")
+@Table(name = "movimentacao")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Fornecedor {
+public class Movimentacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String rzsocial;
+    private EnumMovimentacao tipo;
 
-    private String nomef;
+    private Integer quantidade;
 
-    private String cnpj;
-
-    private String email;
-
-    private EnumStatusFornecedor status = EnumStatusFornecedor.ATIVO;
+    private LocalDateTime data;
 }

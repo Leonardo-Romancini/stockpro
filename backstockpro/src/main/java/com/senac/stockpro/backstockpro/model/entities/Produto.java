@@ -1,9 +1,16 @@
 package com.senac.stockpro.backstockpro.model.entities;
 
+import com.senac.stockpro.backstockpro.model.enuns.EnumStatusProduto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "produto")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Produto {
 
     @Id
@@ -18,43 +25,9 @@ public class Produto {
 
     private Double preco;
 
-    public Long getId() {
-        return id;
-    }
+    private Integer estoqueMin;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Integer fornecedor;
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSKU() {
-        return SKU;
-    }
-
-    public void setSKU(String SKU) {
-        this.SKU = SKU;
-    }
-
-    public Integer getEstoque() {
-        return estoque;
-    }
-
-    public void setEstoque(Integer estoque) {
-        this.estoque = estoque;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
+    private EnumStatusProduto status = EnumStatusProduto.ATIVO;
 }

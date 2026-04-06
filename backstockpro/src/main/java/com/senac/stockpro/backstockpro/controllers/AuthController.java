@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(description = "Serviço responsável por controlar a autenticação de usuários e sessão!!!",name = "Serviço autenticação")
+@Tag(description = "Serviço responsável por controlar a autenticação de usuários e sessão",name = "Serviço autenticação")
 public class AuthController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     @PostMapping("/login")
-    @Operation(description = "Esse bagulho aqui faz o login seguindo a regra de negócio", summary = "Login")
+    @Operation(description = "Realiza a validação das credenciais do login e retorna um token", summary = "Login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 
         /*Provisório bichou*/
         if(loginRequest.email().equals("String@s") && loginRequest.senha().equals("String")){
-            return ResponseEntity.ok(new LoginResponse("LMAOXDHAHAHAHAHAHAHAHAHAH"));
+            return ResponseEntity.ok(new LoginResponse("oabecedariointeiro"));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
