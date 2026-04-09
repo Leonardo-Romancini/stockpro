@@ -41,11 +41,9 @@ export default function FornecedorForm({ fornecedorExistente }: FornecedorFormPr
 
     return (
         <div className="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6 lg:px-8">
-            {/* CONTAINER DO FORMULÁRIO */}
             <section className="max-w-4xl mx-auto">
                 <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-zinc-200 overflow-hidden border border-zinc-200">
                     
-                    {/* TOPO DO CARD (ESTILO STOCKPRO) */}
                     <div className="bg-zinc-950 p-8 md:p-10 border-b border-zinc-800">
                         <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter">
                             Dados do <span className="text-blue-500">Fornecedor</span>
@@ -57,7 +55,6 @@ export default function FornecedorForm({ fornecedorExistente }: FornecedorFormPr
 
                     <form action={handleSalvar} className="p-8 md:p-10 space-y-8">
                         
-                        {/* GRID DE CAMPOS: RAZÃO SOCIAL E NOME FANTASIA */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
@@ -88,7 +85,6 @@ export default function FornecedorForm({ fornecedorExistente }: FornecedorFormPr
                             </div>
                         </div>
 
-                        {/* GRID DE CAMPOS: CNPJ E EMAIL */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
@@ -119,7 +115,6 @@ export default function FornecedorForm({ fornecedorExistente }: FornecedorFormPr
                             </div>
                         </div>
 
-                        {/* DIVISOR DE AÇÕES */}
                         <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 border-t border-zinc-100">
                             <Link 
                                 href="/fornecedores"
@@ -138,7 +133,6 @@ export default function FornecedorForm({ fornecedorExistente }: FornecedorFormPr
                     </form>
                 </div>
 
-                {/* BADGE DE SEGURANÇA */}
                 <div className="mt-6 flex items-center justify-center gap-2 text-zinc-400">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
                     <span className="text-[9px] font-black uppercase tracking-[0.3em]">Criptografia de ponta a ponta StockPro</span>
