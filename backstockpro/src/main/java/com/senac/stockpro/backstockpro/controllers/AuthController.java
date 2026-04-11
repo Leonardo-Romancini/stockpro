@@ -3,6 +3,7 @@ package com.senac.stockpro.backstockpro.controllers;
 import com.senac.stockpro.backstockpro.model.DTO.LoginRequest;
 import com.senac.stockpro.backstockpro.model.DTO.LoginResponse;
 import com.senac.stockpro.backstockpro.model.repository.UsuarioRepository;
+import com.senac.stockpro.backstockpro.services.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,19 @@ public class AuthController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     @Operation(description = "Realiza a validação das credenciais do login e retorna um token", summary = "Login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 
         /*Provisório bichou*/
         if(loginRequest.email().equals("String@s") && loginRequest.senha().equals("String")){
-            return ResponseEntity.ok(new LoginResponse("oabecedariointeiro"));
+
+            var token = tokenService.gerarToken(loginRequest.email());
+
+            return ResponseEntity.ok(new LoginResponse(token));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
