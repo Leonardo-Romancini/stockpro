@@ -1,11 +1,12 @@
 'use client'
 
-import { Usuario } from "@/app/context/AuthContext";
+
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
 import UsuarioForm from "../../components/UsuarioForm";
 import axios from "axios";
+import { Usuario } from "@/app/types/usuarios";
 
 export default function EditarUsuario() {
     
@@ -47,7 +48,7 @@ export default function EditarUsuario() {
 
     return (
         <main className="min-h-screen bg-zinc-50 font-sans antialiased">
-            {/* NAVEGAÇÃO SUPERIOR */}
+
             <nav className="w-full max-w-4xl mx-auto px-4 pt-12">
                 <Link 
                     href="/usuarios" 
@@ -61,7 +62,7 @@ export default function EditarUsuario() {
             </nav>
 
             <section className="pb-20">
-                {/* CABEÇALHO DA PÁGINA */}
+
                 <div className="max-w-4xl mx-auto px-4 py-6">
                     <div className="flex items-center justify-between border-b-2 border-zinc-200 pb-6">
                         <div className="space-y-1">
@@ -80,10 +81,10 @@ export default function EditarUsuario() {
                     </div>
                 </div>
 
-                {/* COMPONENTE DE FORMULÁRIO (JÁ COM AS CORREÇÕES DE VALUE || '') */}
+
                 <UsuarioForm usuarioExistente={usuario} />
                 
-                {/* AVISO DE PRIVACIDADE */}
+
                 <div className="max-w-4xl mx-auto px-4 mt-8 flex items-center gap-4 p-4 bg-zinc-100 rounded-2xl border border-zinc-200">
                     <div className="p-2 bg-white rounded-lg shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>

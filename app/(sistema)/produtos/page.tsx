@@ -1,7 +1,7 @@
 'use client'
 
 import Listas from "@/app/components/Lista";
-import { Produto } from "@/app/mock/produto";
+import { Produto } from "@/app/types/produtos";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -43,7 +43,7 @@ export default function Produtos() {
         <main className="min-h-screen flex flex-col font-sans antialiased bg-zinc-50">
             <section className="flex-1 w-full max-w-7xl mx-auto px-6 py-12 space-y-8">
                 
-                {/* HEADER DA PÁGINA: SÓLIDO */}
+
                 <div className="w-full bg-zinc-950 rounded-[2rem] p-8 md:p-10 border-b border-zinc-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="space-y-1">
                         <h1 className="text-4xl font-black text-white uppercase italic tracking-tighter">
@@ -62,7 +62,7 @@ export default function Produtos() {
                     </Link>
                 </div>
 
-                {/* LISTA: FUNDO BRANCO SÓLIDO */}
+
                 <div className="bg-white rounded-[2rem] border-2 border-zinc-200 shadow-sm overflow-hidden">
                     <Listas 
                         dados={produtos} 

@@ -1,14 +1,13 @@
 'use client'
 
-import { Fornecedor } from "@/app/mock/fornecedor";
+
+import { Fornecedor, FornecedorFormProps } from "@/app/types/fornecedores";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface FornecedorFormProps {
-    fornecedorExistente?: Fornecedor
-}
+
 
 export default function FornecedorForm({ fornecedorExistente }: FornecedorFormProps) {
     const [fornecedor, setFornecedor] = useState<Fornecedor>(fornecedorExistente || new Fornecedor(null, '', '', '', '', "ATIVO"))

@@ -1,8 +1,11 @@
 'use client'
 
 import Listas from "@/app/components/Lista";
-import { Usuario } from "@/app/context/AuthContext";
+import { buscarListaUsuarios } from "@/app/services/usuarioService";
+import { Usuario } from "@/app/types/usuarios";
 import axios from "axios";
+
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,9 +16,12 @@ export default function Usuarios() {
 
     const carregarDados = async () => {
         try {
-            const dados = await axios.get<Usuario[]>('http://localhost:8080/usuarios');
-            if (dados.status === 200) setUsuarios(dados.data);
-        } catch (error) { console.error(error); }
+            const dados = await buscarListaUsuarios();
+            setUsuarios(dados);
+        } catch (error) { 
+            alert("Erro ao carregar dados!")
+            console.error(error); 
+        }
     }
 
     const handlerAlterarStatus = async (usuario: Usuario) => {

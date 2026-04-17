@@ -4,19 +4,9 @@ import Cookies from "js-cookie";
 import { stringify } from "querystring";
 import { json } from "stream/consumers";
 import { useRouter } from "next/navigation";
+import {  Usuario } from "../types/usuarios";
 
-export class Usuario {
-    constructor(
-        public id: number|null,
-        public nome: string,
-        public email: string,
-        public senha: string,
-        public cnpj: string,
-        public status: string
-    ) { }
-}
-
-interface AuthContextType {
+export interface AuthContextType {
     usuario: Usuario | null,
     token: string | null,
     login: (usuario: Usuario, token: string) => void,

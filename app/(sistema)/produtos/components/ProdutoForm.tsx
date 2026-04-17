@@ -1,16 +1,14 @@
 'use client'
 
 import { useFornecedorHistorico } from "@/app/context/HistoricoContext";
-import { Fornecedor } from "@/app/mock/fornecedor";
-import { Produto } from "@/app/mock/produto";
+
+import { Fornecedor } from "@/app/types/fornecedores";
+import { Produto, ProdutoFormProps } from "@/app/types/produtos";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface ProdutoFormProps {
-    produtoExistente?: Produto
-}
 
 export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
     const [produto, setProduto] = useState<Produto>(produtoExistente || new Produto(null, '', '', 0, 0, 0, 0, "ATIVO"))
@@ -75,7 +73,6 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
             <section className="max-w-4xl mx-auto">
                 <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-zinc-200 overflow-hidden border border-zinc-200">
                     
-                    {/* TOPO DO CARD */}
                     <div className="bg-zinc-950 p-8 md:p-10 border-b border-zinc-800">
                         <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter">
                             Dados do <span className="text-blue-500">Produto</span>
@@ -87,7 +84,6 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
 
                     <form action={handleSalvar} className="p-8 md:p-10 space-y-8">
                         
-                        {/* NOME E SKU */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-2">
                                 <label className={labelStyle}>Nome do Produto</label>
@@ -114,7 +110,6 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
                             </div>
                         </div>
 
-                        {/* ESTOQUE, PREÇO E ESTOQUE MÍNIMO */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="flex flex-col gap-2">
                                 <label className={labelStyle}>Estoque Atual</label>
@@ -154,7 +149,6 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
                             </div>
                         </div>
 
-                        {/* FORNECEDOR */}
                         <div className="flex flex-col gap-2">
                             <label className={labelStyle}>Fornecedor Homologado</label>
                             <select
@@ -186,7 +180,6 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
                             </select>
                         </div>
 
-                        {/* AÇÕES */}
                         <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 border-t border-zinc-100">
                             <Link 
                                 href="/produtos"

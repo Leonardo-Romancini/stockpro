@@ -1,11 +1,12 @@
 'use client'
 
-import { Fornecedor } from "@/app/mock/fornecedor";
+
 import axios from "axios";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
 import FornecedorForm from "../../components/FornecedorForm";
+import { Fornecedor } from "@/app/types/fornecedores";
 
 export default function EditarFornecedor() {
     

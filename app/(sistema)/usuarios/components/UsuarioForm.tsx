@@ -1,14 +1,12 @@
 'use client'
 
-import { Usuario } from "@/app/context/AuthContext";
+import { Usuario, UsuarioFormProps } from "@/app/types/usuarios";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface UsuarioFormProps {
-  usuarioExistente?: Usuario
-}
+
 
 export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
 
@@ -57,7 +55,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
       <section className="max-w-4xl mx-auto">
         <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-zinc-200 overflow-hidden border border-zinc-200">
 
-          {/* TOPO DO CARD - IDENTIDADE DARK PREMIUM */}
+
           <div className="bg-zinc-950 p-8 md:p-10 border-b border-zinc-800">
             <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter">
               Dados do <span className="text-blue-500">Usuário</span>
@@ -71,7 +69,6 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-              {/* CAMPO: NOME - Correção aplicada: || '' */}
               <div className="space-y-2">
                 <label className={labelStyle}>Nome completo</label>
                 <input
@@ -84,7 +81,6 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                 />
               </div>
 
-              {/* CAMPO: EMAIL - Correção aplicada: || '' */}
               <div className="space-y-2">
                 <label className={labelStyle}>Endereço de E-mail</label>
                 <input
@@ -97,7 +93,6 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                 />
               </div>
 
-              {/* CAMPO: SENHA - Correção aplicada: || '' */}
               <div className="space-y-2">
                 <label className={labelStyle}>Senha de Acesso</label>
                 <input
@@ -110,7 +105,6 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
                 />
               </div>
 
-              {/* CAMPO: CNPJ - Correção aplicada: || '' */}
               <div className="space-y-2">
                 <label className={labelStyle}>Documento (CNPJ/CPF)</label>
                 <input

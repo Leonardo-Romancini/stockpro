@@ -1,11 +1,12 @@
 'use client'
 
-import { Produto } from "@/app/mock/produto";
+
 import axios from "axios";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProdutoForm from "../../components/ProdutoForm";
+import { Produto } from "@/app/types/produtos";
 
 export default function EditarProduto() {
     
@@ -47,7 +48,7 @@ export default function EditarProduto() {
 
     return (
         <main className="min-h-screen bg-zinc-50 font-sans antialiased">
-            {/* NAVEGAÇÃO / BREADCRUMB */}
+
             <nav className="w-full max-w-4xl mx-auto px-4 pt-12">
                 <Link 
                     href="/produtos" 
@@ -61,7 +62,7 @@ export default function EditarProduto() {
             </nav>
 
             <section className="pb-20">
-                {/* TÍTULO DA PÁGINA */}
+
                 <div className="max-w-4xl mx-auto px-4 py-6">
                     <div className="flex items-baseline gap-3">
                         <h1 className="text-2xl font-black text-zinc-900 uppercase italic tracking-tighter">
@@ -77,7 +78,7 @@ export default function EditarProduto() {
                     </p>
                 </div>
 
-                {/* COMPONENTE DE FORMULÁRIO (JÁ ESTILIZADO E COM CORREÇÃO DE VALUES) */}
+
                 <ProdutoForm produtoExistente={produto} />
             </section>
         </main>

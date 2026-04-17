@@ -1,12 +1,12 @@
 'use client'
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth, Usuario } from "../context/AuthContext";
+import { useAuth} from "../context/AuthContext";
 import axios from "axios";
+import { LoginResponse } from "../types/auth";
+import { Usuario } from "../types/usuarios";
 
-interface LoginResponse{
-  token: string
-}
+
 
 export default function LoginPage() {
 
@@ -38,7 +38,7 @@ export default function LoginPage() {
 
           //Validamos na API
           const usuarioMock = new Usuario(1,"Leonardo Vieira","","ATIVO");
-
+debugger;
           login(usuarioMock,loginResult.data.token);
           router.push("/home")
           console.log(`Autentica com email: ${email}`)
