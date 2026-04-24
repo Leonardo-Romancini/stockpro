@@ -12,7 +12,7 @@ export async function buscarListaUsuarios(): Promise<Usuario[]> {
     return[]
 }
 
-export async function AlterarStatusUsuario(usuario: Usuario): Promise<void> {
+export async function alterarStatusUsuario(usuario: Usuario): Promise<void> {
     
     var novoStatus = {};
     if (usuario.status === "ATIVO"){
@@ -23,4 +23,14 @@ export async function AlterarStatusUsuario(usuario: Usuario): Promise<void> {
 
     const dadosResult = await api.put<string>('/usuarios/'+usuario.id+'/AlterarStatus', novoStatus);
     
+    if (dadosResult.status !== 200) {
+        alert("Erro ao atualizar Status!")
+    }
+}
+
+export async function salvarUsuario(usuario: Usuario): Promise<void> {
+    var dadosResult = await api.post<number>('/usuarios', usuario)
+        if (dadosResult.status === 200 || dadosResult.status === 201) {
+          alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
+        } 
 }

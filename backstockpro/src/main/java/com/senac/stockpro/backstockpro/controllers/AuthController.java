@@ -4,6 +4,7 @@ import com.senac.stockpro.backstockpro.model.DTO.LoginRequest;
 import com.senac.stockpro.backstockpro.model.DTO.LoginResponse;
 import com.senac.stockpro.backstockpro.model.repository.UsuarioRepository;
 import com.senac.stockpro.backstockpro.services.TokenService;
+import com.senac.stockpro.backstockpro.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,15 @@ public class AuthController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     @PostMapping("/login")
     @Operation(description = "Realiza a validação das credenciais do login e retorna um token", summary = "Login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 
         /*Provisório bichou*/
-        if(loginRequest.email().equals("String@s") && loginRequest.senha().equals("String")){
+        if(usuarioService.ValidaUsuarioSenha(loginRequest)){
 
             var token = tokenService.gerarToken(loginRequest.email());
 

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,13 @@ public class UsuarioController {
     @Operation(description = "Realiza uma listagem de todos os usuários no banco", summary = "Listagem todos")
     public ResponseEntity<List<?>> listarTodos(){
         return ResponseEntity.ok(usuarioRepository.findAllByOrderByIdAsc());
+    }
+
+    @GetMapping("/usuariologado")
+    @Operation(description = "Busca usuário da sessão",summary = "Consulta usuário logado")
+    public ResponseEntity<Usuario> buscarUsuarioLogado(Authentication authentication){
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        return ResponseEntity.ok(usuarioRepository.findById(usuario.getId()).orElse(null));
     }
 
     @GetMapping("/{id}")

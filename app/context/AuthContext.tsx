@@ -4,14 +4,8 @@ import Cookies from "js-cookie";
 import { stringify } from "querystring";
 import { json } from "stream/consumers";
 import { useRouter } from "next/navigation";
-import {  Usuario } from "../types/usuarios";
+import { AuthContextType, Usuario } from "../types/usuarios";
 
-export interface AuthContextType {
-    usuario: Usuario | null,
-    token: string | null,
-    login: (usuario: Usuario, token: string) => void,
-    logout: () => void
-}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

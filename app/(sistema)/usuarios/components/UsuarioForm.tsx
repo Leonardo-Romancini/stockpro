@@ -1,5 +1,6 @@
 'use client'
 
+import { salvarUsuario } from "@/app/services/usuarioService";
 import { Usuario, UsuarioFormProps } from "@/app/types/usuarios";
 import axios from "axios";
 import Link from "next/link";
@@ -34,10 +35,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
           alert("Usuário atualizado com sucesso!")
         }
       } else {
-        var dadosResult = await axios.post<number>('http://localhost:8080/usuarios', usuario)
-        if (dadosResult.status === 200 || dadosResult.status === 201) {
-          alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
-        }
+        await salvarUsuario(usuario)
       }
       router.push("/usuarios")
     } catch (error) {

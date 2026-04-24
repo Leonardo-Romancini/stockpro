@@ -1,7 +1,7 @@
 'use client'
 
 import Listas from "@/app/components/Lista";
-import { buscarListaUsuarios } from "@/app/services/usuarioService";
+import { alterarStatusUsuario, buscarListaUsuarios } from "@/app/services/usuarioService";
 import { Usuario } from "@/app/types/usuarios";
 import axios from "axios";
 
@@ -26,9 +26,10 @@ export default function Usuarios() {
 
     const handlerAlterarStatus = async (usuario: Usuario) => {
         try {
-            const novoStatus = usuario.status === "ATIVO" ? { status: "INATIVO" } : { status: "ATIVO" };
-            const dadosResult = await axios.put<string>(`http://localhost:8080/usuarios/${usuario.id}/AlterarStatus`, novoStatus);
-            if (dadosResult.status === 200) carregarDados();
+            await alterarStatusUsuario(usuario)
+            carregarDados();
+
+            alert("Usuário salvo com sucesso! Código: " + usuario.id)
         } catch (error) { alert("Erro ao alterar status!"); }
     }
 
