@@ -1,6 +1,6 @@
 'use client'
 
-import { salvarUsuario } from "@/app/services/usuarioService";
+import { editarUsuario, salvarUsuario } from "@/app/services/usuarioService";
 import { Usuario, UsuarioFormProps } from "@/app/types/usuarios";
 import axios from "axios";
 import Link from "next/link";
@@ -30,10 +30,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
   const handleSalvar = async () => {
     try {
       if (usuarioExistente) {
-        var dadosResult = await axios.put<number>('http://localhost:8080/usuarios/' + usuarioExistente.id, usuario)
-        if (dadosResult.status === 200) {
-          alert("Usuário atualizado com sucesso!")
-        }
+         await editarUsuario(usuario)
       } else {
         await salvarUsuario(usuario)
       }

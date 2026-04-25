@@ -34,3 +34,16 @@ export async function salvarUsuario(usuario: Usuario): Promise<void> {
           alert("Usuário salvo com sucesso! Código: " + dadosResult.data)
         } 
 }
+
+
+export async function editarUsuario(usuario: Usuario) {
+    var dadosResult = await api.put<number>('/usuarios/' + usuario.id, usuario)
+        if (dadosResult.status === 200) {
+          alert("Usuário atualizado com sucesso!")
+        }
+}
+
+export async function usuarioPorId(id: number){
+    const response = await api.get<Usuario>('/usuarios/' + id)
+            return response.data;
+}
