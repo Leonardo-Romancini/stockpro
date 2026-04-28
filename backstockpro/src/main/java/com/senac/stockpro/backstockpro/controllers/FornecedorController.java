@@ -48,6 +48,7 @@ public class FornecedorController {
             fornecedorBanco.setCnpj(fornecedor.getCnpj());
             fornecedorBanco.setEmail(fornecedor.getEmail());
             fornecedorBanco.setStatus(fornecedor.getStatus());
+            fornecedorRepository.save(fornecedorBanco);
             return ResponseEntity.ok("Atualizado com sucesso");
         }
 

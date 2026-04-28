@@ -3,17 +3,9 @@ import { Fornecedor } from "../types/fornecedores";
  
 export class FornecedorMock {
  
-    private static fornecedorDB: Fornecedor[] = [
-        new Fornecedor(1, "Tech Solutions Ltda", "TechSol", "12.345.678/0001-01", "contato@techsol.com", "ativo"),
-        new Fornecedor(2, "Logística Global S.A.", "LogGlobal", "98.765.432/0001-99", "vendas@logglobal.com.br", "ativo"),
-        new Fornecedor(3, "Materiais de Construção Silva", "Silva Materiais", "11.222.333/0001-44", "financeiro@silvamateriais.com", "ativo"),
-        new Fornecedor(4, "Distribuidora de Alimentos S.A.", "DistriFood", "55.666.777/0001-88", "sac@distrifood.com", ""),
-        new Fornecedor(5, "Inova Tecnologia EIRELI", "InovaTech", "44.555.666/0001-22", "suporte@inovatech.net", "ativo")
-    ];
+
  
-    static async listarTodos(): Promise<Fornecedor[]>{
-            return [...this.fornecedorDB]
-        }
+
  
         /*
         static async salvar(fornecedor: Fornecedor):Promise<void> {
@@ -41,9 +33,6 @@ export class FornecedorMock {
             }
                 */
 
-            static async buscarPorId(id: Number): Promise<Fornecedor | undefined> {
-            
-                    return this.fornecedorDB.find(f => f.id === id)
-                }
+        
  
 }

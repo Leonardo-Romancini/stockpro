@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
 import FornecedorForm from "../../components/FornecedorForm";
 import { Fornecedor } from "@/app/types/fornecedores";
+import { fornecedorPorId } from "@/app/services/fornecedorService";
 
 export default function EditarFornecedor() {
     
@@ -22,9 +23,8 @@ export default function EditarFornecedor() {
 
     const buscarDados = async () => {
         try {
-            const response = await axios.get<Fornecedor>('http://localhost:8080/fornecedores/' + codigo)
-            if (response.data) {
-                setFornecedor(response.data)
+            if (await fornecedorPorId(codigo)) {
+                setFornecedor(await fornecedorPorId(codigo))
             } else {
                 router.push("/fornecedores")
             }

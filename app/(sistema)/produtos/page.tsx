@@ -1,8 +1,8 @@
 'use client'
 
 import Listas from "@/app/components/Lista";
+import { alterarStatusProdutos, buscarListaProdutos } from "@/app/services/produtoService";
 import { Produto } from "@/app/types/produtos";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -15,11 +15,8 @@ export default function Produtos() {
 
     const carregarDados = async () => {
         try {
-            const dados = await axios.get<Produto[]>('http://localhost:8080/produtos');
-            if (dados.status !== 200) {
-                alert("Erro ao carregar dados!");
-            }
-            setProdutos(dados.data);
+            const dados = await buscarListaProdutos()
+            setProdutos(dados);
         } catch (error) {
             console.error(error);
         }
@@ -27,13 +24,8 @@ export default function Produtos() {
 
     const handlerAlterarStatus = async (produto: Produto) => {
         try {
-            const novoStatus = produto.status === "ATIVO" ? { status: "INATIVO" } : { status: "ATIVO" };
-            const dadosResult = await axios.put<string>(`http://localhost:8080/produtos/${produto.id}/AlterarStatus`, novoStatus);
-            
-            if (dadosResult.status === 200) {
+            await alterarStatusProdutos(produto)
                 carregarDados();
-                alert(dadosResult.data);
-            }
         } catch (error) {
             alert("Erro ao alterar status do produto!");
         }

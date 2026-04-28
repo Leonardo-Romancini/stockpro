@@ -48,6 +48,7 @@ public class ProdutoController {
                 produtoBanco.setEstoque(produto.getEstoque());
                 produtoBanco.setPreco(produto.getPreco());
                 produtoBanco.setEstoqueMin(produto.getEstoqueMin());
+                produtoRepository.save(produtoBanco);
                 return ResponseEntity.ok("Atualizado com sucesso");
             }
 

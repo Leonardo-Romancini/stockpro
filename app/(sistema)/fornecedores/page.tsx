@@ -1,7 +1,8 @@
 'use client'
 
 import Listas from "@/app/components/Lista";
-import { Fornecedor } from "@/app/mock/fornecedor";
+import { alterarStatusFornecedor, buscarListaFornecedores } from "@/app/services/fornecedorService";
+import { Fornecedor } from "@/app/types/fornecedores";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,16 +14,18 @@ export default function Fornecedores() {
 
     const carregarDados = async () => {
         try {
-            const dados = await axios.get<Fornecedor[]>('http://localhost:8080/fornecedores');
-            if (dados.status === 200) setFornecedores(dados.data);
-        } catch (error) { console.error(error); }
+            const dados = await buscarListaFornecedores()
+            setFornecedores(dados);
+        } catch (error) { 
+            alert("Erro ao carregar os dados!")
+            console.error(error);
+         }
     }
 
     const handlerAlterarStatus = async (fornecedor: Fornecedor) => {
         try {
-            const novoStatus = fornecedor.status === "ATIVO" ? { status: "INATIVO" } : { status: "ATIVO" };
-            const dadosResult = await axios.put<string>(`http://localhost:8080/fornecedores/${fornecedor.id}/AlterarStatus`, novoStatus);
-            if (dadosResult.status === 200) carregarDados();
+            await alterarStatusFornecedor(fornecedor);
+            carregarDados();
         } catch (error) { alert("Erro ao alterar status!"); }
     }
 

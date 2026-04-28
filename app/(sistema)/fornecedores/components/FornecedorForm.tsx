@@ -6,6 +6,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import EditarFornecedor from "../[codigo]/editar/page";
+import { editarFornecedor, salvarFornecedor } from "@/app/services/fornecedorService";
 
 
 
@@ -28,11 +30,12 @@ export default function FornecedorForm({ fornecedorExistente }: FornecedorFormPr
 
     const handleSalvar = async () => {
         try {
-            const dadosResult = await axios.post<number>('http://localhost:8080/fornecedores', fornecedor)
-            if (dadosResult.status === 200 || dadosResult.status === 201) {
-                alert("Fornecedor salvo com sucesso! Código: " + dadosResult.data)
-                router.push("/fornecedores")
+            if(fornecedorExistente){
+                await editarFornecedor(fornecedor)
+            } else {
+                await salvarFornecedor(fornecedor)
             }
+            router.push("/fornecedores")
         } catch (error) {
             alert("Erro ao salvar fornecedor. Verifique os dados.")
         }

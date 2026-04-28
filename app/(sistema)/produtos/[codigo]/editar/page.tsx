@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProdutoForm from "../../components/ProdutoForm";
 import { Produto } from "@/app/types/produtos";
+import { produtoPorId } from "@/app/services/produtoService";
 
 export default function EditarProduto() {
     
@@ -22,9 +23,8 @@ export default function EditarProduto() {
 
     const buscarDados = async () => {
         try {
-            const response = await axios.get<Produto>('http://localhost:8080/produtos/' + codigo)
-            if (response.data) {
-                setProduto(response.data)
+            if (await produtoPorId(codigo)) {
+                setProduto(await produtoPorId(codigo))
             } else {
                 router.push("/produtos")
             }

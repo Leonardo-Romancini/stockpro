@@ -19,7 +19,7 @@ export default function Usuarios() {
             const dados = await buscarListaUsuarios();
             setUsuarios(dados);
         } catch (error) { 
-            alert("Erro ao carregar dados!")
+            alert("Erro ao carregar os dados!")
             console.error(error); 
         }
     }
