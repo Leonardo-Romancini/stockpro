@@ -1,6 +1,8 @@
 'use client'
 
 import { useFornecedorHistorico } from "@/app/context/HistoricoContext";
+import { buscarListaFornecedores } from "@/app/services/fornecedorService";
+import { editarProduto, salvarProduto } from "@/app/services/produtoService";
 
 import { Fornecedor } from "@/app/types/fornecedores";
 import { Produto, ProdutoFormProps } from "@/app/types/produtos";
@@ -26,10 +28,7 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
 
     const carregarFornecedores = async () => {
         try {
-            const dados = await axios.get<Fornecedor[]>('http://localhost:8080/fornecedores');
-            if (dados.status === 200) {
-                setFornecedores(dados.data);
-            }
+                setFornecedores(await buscarListaFornecedores());
         } catch (error) {
             console.error(error);
         }
@@ -52,14 +51,16 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
 
     const handleSalvar = async () => {
         try {
-            const dadosResult = await axios.post<number>('http://localhost:8080/produtos', produto)
-            if (dadosResult.status === 200 || dadosResult.status === 201) {
+            if(produtoExistente){
+                await editarProduto(produto)
+            } else {
+                await salvarProduto(produto)
+            }
                 if (produto.fornecedor) {
                     registrarUso(Number(produto.fornecedor));
                 }
                 router.push("/produtos")
-            }
-        } catch (error) {
+            } catch (error) {
             alert("Erro ao salvar o produto.");
         }
     }
