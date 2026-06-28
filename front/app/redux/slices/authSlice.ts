@@ -27,6 +27,7 @@ const authSlice = createSlice(
 
             },
             setUsuario : (state, action: PayloadAction<{usuario: Usuario}>) => {
+                console.log("Salvando no Redux:", action.payload.usuario);
 
                 state.usuario = action.payload.usuario;
                 Cookies.set('usuario', JSON.stringify(action.payload.usuario), { expires: 7 });

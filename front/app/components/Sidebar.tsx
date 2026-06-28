@@ -1,10 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store"; // Ajuste o caminho conforme a sua estrutura
 
 export default function Sidebar() {
+  // Acessamos o estado 'auth' que você definiu no store
+  const { usuario } = useSelector((state: RootState) => state.auth);
+
+  const navItems = [
+    { name: "Home", href: "/home", icon: "🏠" },
+    { name: "Fornecedores", href: "/fornecedores", icon: "👥" },
+    { name: "Produtos", href: "/produtos", icon: "🏷️" },
+    { name: "Movimentações", href: "/movimentacao", icon: "🔄" },
+  ];
+
   return (
     <aside className="sticky top-0 h-screen w-64 bg-zinc-950 text-white flex flex-col border-r border-zinc-800 shadow-2xl">
-
-      {/* Header / Logo - Agora combinando com o estilo dos formulários */}
+      {/* Header / Logo */}
       <div className="p-8 border-b border-zinc-900 flex items-center gap-3">
         <div className="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-900/20 flex items-center justify-center rotate-3">
           <span className="text-xl">📦</span>
@@ -14,30 +27,32 @@ export default function Sidebar() {
         </span>
       </div>
 
-      {/* Navegação */}
       <nav className="flex-1 p-4 pt-8 space-y-2 overflow-y-auto">
-        
-        {/* Helper para as rotas */}
-        {[
-          { name: "Home", href: "/home", icon: "🏠" },
-          { name: "Fornecedores", href: "/fornecedores", icon: "👥" },
-          { name: "Produtos", href: "/produtos", icon: "🏷️" },
-          { name: "Movimentações", href: "/movimentacao", icon: "🔄" },
-          { name: "Usuários", href: "/usuarios", icon: "👤" },
-        ].map((item) => (
+        {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all hover:bg-zinc-900 hover:translate-x-1 group border border-transparent hover:border-zinc-800"
           >
-            <span className="text-lg opacity-70 group-hover:opacity-100 transition-opacity">
-              {item.icon}
-            </span>
-            <span className="text-xs font-black uppercase tracking-widest text-zinc-400 group-hover:text-blue-500 transition-colors">
+            <span className="text-lg opacity-70 group-hover:opacity-100">{item.icon}</span>
+            <span className="text-xs font-black uppercase tracking-widest text-zinc-400 group-hover:text-blue-500">
               {item.name}
             </span>
           </Link>
         ))}
+
+        {/* Renderiza link "Usuários" apenas para ADMIN */}
+        {usuario?.role === "ROLE_ADMIN" && (
+          <Link
+            href="/usuarios"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all hover:bg-zinc-900 hover:translate-x-1 group border border-transparent hover:border-zinc-800"
+          >
+            <span className="text-lg opacity-70 group-hover:opacity-100">👤</span>
+            <span className="text-xs font-black uppercase tracking-widest text-zinc-400 group-hover:text-blue-500">
+              Usuários
+            </span>
+          </Link>
+        )}
       </nav>
 
       {/* Footer da Sidebar */}

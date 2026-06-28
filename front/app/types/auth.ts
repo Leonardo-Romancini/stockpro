@@ -1,7 +1,8 @@
 import { Usuario } from "./usuarios";
 
 export interface LoginResponse{
-  token: string
+  token: string,
+  role: string
 }
 
 //foi criado agora para ser usado no authservice

@@ -13,39 +13,36 @@ export default function LoginPage() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const handleLogin = async (formData:FormData) => {
-        const email = formData.get("email") as string;
-        const senha = formData.get("senha") as string;
+    const handleLogin = async (formData: FormData) => {
+    const email = formData.get("email") as string;
+    const senha = formData.get("senha") as string;
 
-        try {
+    try {
+        // 1. Faz o login e recebe o token + role
+        const loginResult = await loginService({ email, senha });
 
-            const loginResult = await loginService({email:email,senha:senha});
-            if (!loginResult.token) {
-                alert("Usuario ou senha invalido!")
-                return;
-            }
-            var token = loginResult.token;
-            
-            dispatch(setToken(
-                {
-                    token: token
-                }
-            ));
-            const usuario = await buscarUsuarioLogado(token);
-             dispatch(setUsuario(
-                {
-                    usuario: {...usuario}
-                }
-            ));
-
-
-        } catch (error) {
-            alert("Erro ao entrar no sistema!")
+        if (!loginResult.token) {
+            alert("Usuário ou senha inválidos!");
+            return;
         }
 
-        console.log(`Autenticado com email: ${email}`)
-        router.push("/home")
+        // 2. Salva o token no Redux/Contexto
+        dispatch(setToken({ token: loginResult.token }));
+
+        // 3. Busca o usuário logado (este objeto já contém a 'role' que configuramos no Back-end)
+        const usuarioCompleto = await buscarUsuarioLogado(loginResult.token);
+
+        // 4. Salva o objeto usuário completo no Redux/Contexto
+        dispatch(setUsuario({ usuario: usuarioCompleto }));
+
+        // 5. Redireciona
+        router.push("/home");
+
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao entrar no sistema!");
     }
+};
 
 return (
   <main className="min-h-screen flex flex-col overflow-x-hidden relative font-sans antialiased bg-gradient-to-br from-zinc-100 via-blue-100 to-blue-400/50">

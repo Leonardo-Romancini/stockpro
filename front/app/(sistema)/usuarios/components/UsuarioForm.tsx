@@ -2,43 +2,46 @@
 
 import { editarUsuario, salvarUsuario } from "@/app/services/usuarioService";
 import { Usuario, UsuarioFormProps } from "@/app/types/usuarios";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
-
 export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
 
-  const [usuario, setUsuario] = useState<Usuario>(usuarioExistente || new Usuario(null, '', '','','', "ATIVO"))
+  const [usuario, setUsuario] = useState<Usuario>(
+    usuarioExistente || new Usuario(null, '', '', '', 'ROLE_USER', '', "ATIVO")
+  );
+  
   const router = useRouter();
 
-  const handleChange = (campo: 'nome' | 'email'| 'senha' | 'cnpj', valor: string) => {
+  const handleChange = (campo: 'nome' | 'email' | 'senha' | 'cnpj', valor: string) => {
     setUsuario(prev =>
       new Usuario(
         prev.id,
         campo === 'nome' ? valor : prev.nome,
         campo === 'email' ? valor : prev.email,
         campo === 'senha' ? valor : prev.senha,
+        prev.role, 
         campo === 'cnpj' ? valor : prev.cnpj,
         prev.status
       )
-    )
-  }
+    );
+  };
 
   const handleSalvar = async () => {
     try {
+      // Como a classe Usuario tem o método constructor, ao enviar para o back-end,
+      // ele respeitará o objeto atual.
       if (usuarioExistente) {
-         await editarUsuario(usuario)
+        await editarUsuario(usuario);
       } else {
-        await salvarUsuario(usuario)
+        await salvarUsuario(usuario);
       }
-      router.push("/usuarios")
+      router.push("/usuarios");
     } catch (error) {
-      alert("Erro ao processar a requisição. Verifique os dados.")
+      alert("Erro ao processar a requisição. Verifique os dados.");
     }
-  }
+  };
 
   // Estilos reutilizáveis para manter o padrão StockPro
   const labelStyle = "text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1";
