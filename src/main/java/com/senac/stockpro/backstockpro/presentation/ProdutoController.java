@@ -1,6 +1,7 @@
 package com.senac.stockpro.backstockpro.presentation;
 
 import com.senac.stockpro.backstockpro.application.DTO.AlterarStatusProdutoRequest;
+import com.senac.stockpro.backstockpro.application.DTO.EstatisticaProdutoResponse;
 import com.senac.stockpro.backstockpro.application.DTO.ProdutoRequest;
 import com.senac.stockpro.backstockpro.application.DTO.ProdutoResponse;
 import com.senac.stockpro.backstockpro.application.services.ProdutoService;
@@ -57,5 +58,11 @@ public class ProdutoController {
         var alterarStatus = produtoService.AlterarStatus(statusRequest, id);
 
         return alterarStatus ? ResponseEntity.ok("Status atualizado com sucesso.") : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/estatisticas")
+    @Operation(description = "Retorna o total de produtos e a quantidade em estoque crítico", summary = "Estatisticas de produtos")
+    public ResponseEntity<EstatisticaProdutoResponse> obterEstatisticas() {
+        return ResponseEntity.ok(produtoService.obterEstatisticasProduto());
     }
 }

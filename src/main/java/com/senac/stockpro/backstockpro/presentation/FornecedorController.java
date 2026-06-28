@@ -1,9 +1,6 @@
 package com.senac.stockpro.backstockpro.presentation;
 
-import com.senac.stockpro.backstockpro.application.DTO.AlterarStatusFornecedorRequest;
-import com.senac.stockpro.backstockpro.application.DTO.FornecedorDeskRequest;
-import com.senac.stockpro.backstockpro.application.DTO.FornecedorRequest;
-import com.senac.stockpro.backstockpro.application.DTO.FornecedorResponse;
+import com.senac.stockpro.backstockpro.application.DTO.*;
 import com.senac.stockpro.backstockpro.application.services.FornecedorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +23,6 @@ FornecedorController {
     @Operation(description = "Realiza uma listagem de todos os fornecedores do usuário no banco", summary = "Listagem todos")
     public ResponseEntity<List<FornecedorResponse>> listarTodos(){
         var fornecedores = fornecedorService.ListarTodos();
-
         return ResponseEntity.ok(fornecedores);
     }
 
@@ -61,5 +57,12 @@ FornecedorController {
     @Operation(description = "Registra um novo fornecedor no banco via desk", summary = "Salvar fornecedor desk")
     public ResponseEntity<Long> salvarDesk(@RequestBody FornecedorDeskRequest fornecedor){
         return ResponseEntity.ok(fornecedorService.SalvarFornecedorDesk(fornecedor));
+    }
+
+    @GetMapping("/total")
+    @Operation(description = "Retorna a contagem de fornecedores (Total para Admin, ou por usuário)", summary = "Contar fornecedores")
+    public ResponseEntity<EstatisticaFornecedorResponse> contarFornecedores() {
+        EstatisticaFornecedorResponse resposta = fornecedorService.contarFornecedores();
+        return ResponseEntity.ok(resposta);
     }
 }

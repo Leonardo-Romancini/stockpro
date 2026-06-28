@@ -112,4 +112,10 @@ public class UsuarioService {
             throw new RuntimeException(e);
         }
     }
+
+    public String buscarRolePorEmail(String email) {
+        return usuarioRepository.findByEmail(email) // Certifique-se de ter este método no repositório
+                .map(Usuario::getRole)
+                .orElse("ROLE_USER"); // Valor padrão caso não encontre
+    }
 }

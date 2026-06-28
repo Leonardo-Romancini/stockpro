@@ -135,4 +135,17 @@ public class FornecedorService {
         }
     }
 
+    public EstatisticaFornecedorResponse contarFornecedores() {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long total;
+
+        if ("ROLE_ADMIN".equals(usuarioLogado.getRole())) {
+            total = fornecedorRepository.count();
+        } else {
+            total = fornecedorRepository.countByUsuario_Id(usuarioLogado.getId());
+        }
+
+        return new EstatisticaFornecedorResponse(total);
+    }
+
 }

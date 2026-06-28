@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "produto")
 @Data
-//trocar o data por getter e setter se ocorrer erro de lazy
 @NoArgsConstructor
 @AllArgsConstructor
 public class Produto {

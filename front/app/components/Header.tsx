@@ -42,9 +42,7 @@ const usuario = store.getState().auth.usuario;
               <span className="text-sm font-bold text-white tracking-tight leading-none">
                 {usuario?.nome||'Usuário indefinido!'}
               </span>
-              <span className="text-[10px] uppercase tracking-[0.15em] font-black text-blue-500 mt-1">
-                Admin <span className="text-zinc-500 font-medium">| Painel de Estoque</span>
-              </span>
+              
             </div>
           </div>
         </div>

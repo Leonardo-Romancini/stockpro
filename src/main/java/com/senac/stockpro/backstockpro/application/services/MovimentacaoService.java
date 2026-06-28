@@ -2,13 +2,16 @@ package com.senac.stockpro.backstockpro.application.services;
 
 import com.senac.stockpro.backstockpro.application.DTO.*;
 import com.senac.stockpro.backstockpro.domain.entities.Movimentacao;
+import com.senac.stockpro.backstockpro.domain.entities.Produto;
 import com.senac.stockpro.backstockpro.domain.entities.Usuario;
+import com.senac.stockpro.backstockpro.domain.enuns.EnumMovimentacao;
 import com.senac.stockpro.backstockpro.domain.repository.MovimentacaoRepository;
 import com.senac.stockpro.backstockpro.domain.repository.ProdutoRepository;
 import com.senac.stockpro.backstockpro.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,14 +81,30 @@ public class MovimentacaoService {
         }
     }
 
-    public Long SalvarNovimentacao(MovimentacaoRequest movimentacao) {
+    @Transactional //Impede que seja feita a mudança no estoque sem registrar a movimentação e vice e versa
+    public Long SalvarMovimentacao(MovimentacaoRequest movimentacao) {
         try {
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Movimentacao novaMovimentacao = new Movimentacao(movimentacao);
 
+            //Parte que cuida de realizar a mudança da quantidade em estoque
             if (movimentacao.produtoId() != null) {
-                var produto = produtoRepository.findById(movimentacao.produtoId())
+                Produto produto = produtoRepository.findById(movimentacao.produtoId())
                         .orElseThrow(() -> new RuntimeException("Produto não encontrado com o ID: " + movimentacao.produtoId()));
+                /*
+                O if de cima procura o produto e e caso de certo a parte de baixo verifica o tipo de
+                movimentação e realiza a soma/subtração
+                */
+                if (movimentacao.tipo() == EnumMovimentacao.ENTRADA) {
+                    produto.setEstoque(produto.getEstoque() + movimentacao.quantidade());
+                } else if (movimentacao.tipo() == EnumMovimentacao.SAIDA) {
+                    if (produto.getEstoque() < movimentacao.quantidade()) {
+                        throw new RuntimeException("Estoque insuficiente para a saída solicitada.");
+                    }
+                    produto.setEstoque(produto.getEstoque() - movimentacao.quantidade());
+                }
+
+                produtoRepository.save(produto); // Persiste a nova quantidade
                 novaMovimentacao.setProduto(produto);
             }
 
@@ -98,11 +117,29 @@ public class MovimentacaoService {
             }
 
             return movimentacaoRepository.save(novaMovimentacao).getId();
+
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Erro ao processar movimentação", e);
         }
     }
 
+    public EstatisticaMovimentacaoResponse obterEstatisticasMovimentacao() {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        long entradas;
+        long saidas;
+
+        if ("ROLE_ADMIN".equals(usuarioLogado.getRole())) {
+            entradas = movimentacaoRepository.countEntradasAdmin();
+            saidas = movimentacaoRepository.countSaidasAdmin();
+        } else {
+            entradas = movimentacaoRepository.countEntradasPorUsuario(usuarioLogado.getId());
+            saidas = movimentacaoRepository.countSaidasPorUsuario(usuarioLogado.getId());
+        }
+
+        return new EstatisticaMovimentacaoResponse(entradas, saidas);
+    }
 
 }

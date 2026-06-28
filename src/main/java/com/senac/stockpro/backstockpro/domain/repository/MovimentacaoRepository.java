@@ -1,6 +1,7 @@
 package com.senac.stockpro.backstockpro.domain.repository;
 
 import com.senac.stockpro.backstockpro.domain.entities.Movimentacao;
+import com.senac.stockpro.backstockpro.domain.enuns.EnumMovimentacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,25 @@ public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long
     List<Movimentacao> findByUsuario_IdAndProduto_NomeContainingIgnoreCaseOrderByIdAsc(Long usuarioId, String produtoNome);
 
     List<Movimentacao> findAllByOrderByIdAsc();
+
+    //comandos para a home
+    long countByTipo(EnumMovimentacao tipo);
+
+    default long countEntradasAdmin() {
+        return countByTipo(EnumMovimentacao.ENTRADA);
+    }
+
+    default long countSaidasAdmin() {
+        return countByTipo(EnumMovimentacao.SAIDA);
+    }
+
+    long countByTipoAndUsuario_Id(EnumMovimentacao tipo, Long usuarioId);
+
+    default long countEntradasPorUsuario(Long usuarioId) {
+        return countByTipoAndUsuario_Id(EnumMovimentacao.ENTRADA, usuarioId);
+    }
+
+    default long countSaidasPorUsuario(Long usuarioId) {
+        return countByTipoAndUsuario_Id(EnumMovimentacao.SAIDA, usuarioId);
+    }
 }

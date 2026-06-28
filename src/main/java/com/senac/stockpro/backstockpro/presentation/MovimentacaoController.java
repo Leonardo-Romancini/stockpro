@@ -1,5 +1,6 @@
 package com.senac.stockpro.backstockpro.presentation;
 
+import com.senac.stockpro.backstockpro.application.DTO.EstatisticaMovimentacaoResponse;
 import com.senac.stockpro.backstockpro.application.DTO.MovimentacaoRequest;
 import com.senac.stockpro.backstockpro.application.DTO.MovimentacaoResponse;
 import com.senac.stockpro.backstockpro.application.services.MovimentacaoService;
@@ -28,7 +29,7 @@ public class MovimentacaoController {
     @PostMapping
     @Operation(description = "Registra uma nova movimentação no banco", summary = "Salvar movimentação")
     public ResponseEntity<Long> salvar(@RequestBody MovimentacaoRequest movimentacao){
-        return ResponseEntity.ok(movimentacaoService.SalvarNovimentacao(movimentacao));
+        return ResponseEntity.ok(movimentacaoService.SalvarMovimentacao(movimentacao));
     }
 
     @GetMapping("/{id}")
@@ -41,5 +42,12 @@ public class MovimentacaoController {
     @Operation(description = "Realiza uma busca de movimentações filtradas pelo nome do produto", summary = "Pesquisar movimentações")
     public ResponseEntity<List<MovimentacaoResponse>> pesquisar(@RequestParam String pesquisa) {
         return ResponseEntity.ok(movimentacaoService.PesquisarMovimentacao(pesquisa));
+    }
+
+    @GetMapping("/estatisticas")
+    @Operation(description = "Retorna a contagem total de entradas e saídas", summary = "Estatisticas de movimentação")
+    public ResponseEntity<EstatisticaMovimentacaoResponse> obterEstatisticas() {
+        var estatisticas = movimentacaoService.obterEstatisticasMovimentacao();
+        return ResponseEntity.ok(estatisticas);
     }
 }

@@ -29,12 +29,13 @@ public class AuthController {
     @Operation(description = "Realiza a validação das credenciais do login e retorna um token", summary = "Login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 
-        /*Provisório bichou*/
         if(usuarioService.ValidaUsuarioSenha(loginRequest)){
-
             var token = tokenService.gerarToken(loginRequest.email());
 
-            return ResponseEntity.ok(new LoginResponse(token));
+            // Busca a role diretamente do banco via service
+            String role = usuarioService.buscarRolePorEmail(loginRequest.email());
+
+            return ResponseEntity.ok(new LoginResponse(token, role));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

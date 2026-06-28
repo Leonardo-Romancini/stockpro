@@ -15,4 +15,9 @@ public interface FornecedorRepository extends JpaRepository<Fornecedor,Long> {
     List<Fornecedor> getFornecedoresByUsuario_IdOrderByIdAsc(Long usuario);
 
     List<Fornecedor> findAllByOrderByIdAsc();
+
+    //comandos para o home
+    long count();
+
+    long countByUsuario_Id(Long usuarioId);
 }

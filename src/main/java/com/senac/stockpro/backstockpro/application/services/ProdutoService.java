@@ -129,6 +129,23 @@ public class ProdutoService {
             throw new RuntimeException(e);
         }
     }
+
+    public EstatisticaProdutoResponse obterEstatisticasProduto() {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        long total;
+        long criticos;
+
+        if ("ROLE_ADMIN".equals(usuarioLogado.getRole())) {
+            total = produtoRepository.count();
+            criticos = produtoRepository.countEstoqueCriticoAdmin();
+        } else {
+            total = produtoRepository.countByUsuario_Id(usuarioLogado.getId());
+            criticos = produtoRepository.countEstoqueCriticoUsuario(usuarioLogado.getId());
+        }
+
+        return new EstatisticaProdutoResponse(total, criticos);
+    }
 }
 
 
