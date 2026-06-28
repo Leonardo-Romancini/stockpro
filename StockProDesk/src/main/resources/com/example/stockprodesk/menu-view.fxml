@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stockprodesk.MenuController">
+   <children>
+      <Button layoutX="238.0" layoutY="175.0" mnemonicParsing="false" onAction="#onCadastrarButtonClick" text="Cadastro de Usuário" />
+      <Button layoutX="31.0" layoutY="26.0" mnemonicParsing="false" onAction="#onVoltarButtonClick" text="Voltar" />
+      <Button layoutX="228.0" layoutY="224.0" mnemonicParsing="false" onAction="#onFornecedorButtonClick" text="Cadastro de Fornecedor" />
+   </children>
+</AnchorPane>

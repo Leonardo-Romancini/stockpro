@@ -1,0 +1,45 @@
+package com.senac.stockpro.backstockpro.presentation;
+
+import com.senac.stockpro.backstockpro.application.DTO.MovimentacaoRequest;
+import com.senac.stockpro.backstockpro.application.DTO.MovimentacaoResponse;
+import com.senac.stockpro.backstockpro.application.services.MovimentacaoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/movimentacoes")
+@Tag(description = "Serviço responsável por controlar a criação e listagem das movimentações",name = "Serviço movimentação")
+public class MovimentacaoController {
+
+    @Autowired
+    private MovimentacaoService movimentacaoService;
+
+    @GetMapping
+    @Operation(description = "Realiza uma listagem de todas as movimentações do usuário no banco", summary = "Listagem todas")
+    public ResponseEntity<List<?>> listarTodos(){
+        return ResponseEntity.ok(movimentacaoService.ListarTodos());
+    }
+
+    @PostMapping
+    @Operation(description = "Registra uma nova movimentação no banco", summary = "Salvar movimentação")
+    public ResponseEntity<Long> salvar(@RequestBody MovimentacaoRequest movimentacao){
+        return ResponseEntity.ok(movimentacaoService.SalvarNovimentacao(movimentacao));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(description = "Realiza uma busca de uma movimentação através de seu ID", summary = "Listar movimentação")
+    public ResponseEntity<MovimentacaoResponse> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(movimentacaoService.BuscarMovimentacaoPorId(id));
+    }
+
+    @GetMapping("/pesquisa")
+    @Operation(description = "Realiza uma busca de movimentações filtradas pelo nome do produto", summary = "Pesquisar movimentações")
+    public ResponseEntity<List<MovimentacaoResponse>> pesquisar(@RequestParam String pesquisa) {
+        return ResponseEntity.ok(movimentacaoService.PesquisarMovimentacao(pesquisa));
+    }
+}

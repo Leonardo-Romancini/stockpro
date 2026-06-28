@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stockprodesk.FornecedorController">
+   <children>
+      <Label layoutX="87.0" layoutY="190.0" prefHeight="10.0" prefWidth="31.0" text="CNPJ:" />
+      <TextField fx:id="txtCnpj" layoutX="131.0" layoutY="188.0" />
+      <Label layoutX="48.0" layoutY="123.0" text="Razão Social:" />
+      <TextField fx:id="txtRazaoSocial" layoutX="131.0" layoutY="119.0" />
+      <Label layoutX="36.0" layoutY="155.0" text="Nome Fantasia:" />
+      <TextField fx:id="txtNomeFantasia" layoutX="131.0" layoutY="151.0" />
+      <Label layoutX="82.0" layoutY="224.0" text="Email:" />
+      <TextField fx:id="txtEmail" layoutX="131.0" layoutY="220.0" />
+      <Button layoutX="300.0" layoutY="188.0" mnemonicParsing="false" onAction="#onBuscarButtonClick" text="Buscar" />
+      <Button layoutX="173.0" layoutY="275.0" mnemonicParsing="false" onAction="#onSalvarButtonClick" text="Salvar" />
+   </children>
+</AnchorPane>
