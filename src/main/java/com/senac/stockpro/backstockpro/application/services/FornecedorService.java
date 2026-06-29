@@ -5,6 +5,7 @@ import com.senac.stockpro.backstockpro.domain.entities.Fornecedor;
 import com.senac.stockpro.backstockpro.domain.entities.Usuario;
 import com.senac.stockpro.backstockpro.domain.repository.FornecedorRepository;
 import com.senac.stockpro.backstockpro.domain.repository.UsuarioRepository;
+import com.senac.stockpro.backstockpro.infra.external.OpenCNPJClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,9 @@ public class FornecedorService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private OpenCNPJClient openCNPJClient;
 
     @Value("${spring.secretkey}")
     private String secret;
@@ -101,6 +105,11 @@ public class FornecedorService {
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             Fornecedor novoFornecedor = new Fornecedor(fornecedor);
+
+            //Validar se o cnpj inserido existe
+            if (!openCNPJClient.cnpjExiste(fornecedor.cnpj())) {
+                throw new RuntimeException("O CNPJ fornecido não existe na base de dados.");
+            }
 
             if (usuarioLogado != null && usuarioLogado.getId() != null) {
                 Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
