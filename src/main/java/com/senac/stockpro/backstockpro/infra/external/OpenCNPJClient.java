@@ -23,11 +23,11 @@ public class OpenCNPJClient {
                     .build();
 
             HttpResponse<Void> response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
-            // Log para debugar:
+
             System.out.println("Status da API CNPJ: " + response.statusCode());
             return response.statusCode() == 200;
         } catch (Exception e) {
-            e.printStackTrace(); // Ajuda a ver o erro no console
+            e.printStackTrace();
             return false;
         }
     }

@@ -87,14 +87,15 @@ public class MovimentacaoService {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Movimentacao novaMovimentacao = new Movimentacao(movimentacao);
 
-        // Busca o produto
+        //Busca o produto
         Produto produto = produtoRepository.findById(movimentacao.produtoId())
                 .orElseThrow(() -> new NegocioException("Produto não encontrado com o ID: " + movimentacao.produtoId()));
 
-        // Lógica de estoque
+        //Confere o tipo da movimentação e altera a quantidade em estoque
         if (movimentacao.tipo() == EnumMovimentacao.ENTRADA) {
             produto.setEstoque(produto.getEstoque() + movimentacao.quantidade());
         } else if (movimentacao.tipo() == EnumMovimentacao.SAIDA) {
+            //impede a alteração caso seja uma saída maior do que o estoque
             if (produto.getEstoque() < movimentacao.quantidade()) {
                 throw new NegocioException("Estoque insuficiente para a saída solicitada.");
             }
@@ -104,7 +105,7 @@ public class MovimentacaoService {
         produtoRepository.save(produto);
         novaMovimentacao.setProduto(produto);
 
-        // Busca o usuário
+        //Valida o usuário
         Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
                 .orElseThrow(() -> new NegocioException("Usuário logado não encontrado!"));
 
