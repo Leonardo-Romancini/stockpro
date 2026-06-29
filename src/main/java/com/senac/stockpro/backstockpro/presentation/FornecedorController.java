@@ -2,6 +2,7 @@ package com.senac.stockpro.backstockpro.presentation;
 
 import com.senac.stockpro.backstockpro.application.DTO.*;
 import com.senac.stockpro.backstockpro.application.services.FornecedorService;
+import com.senac.stockpro.backstockpro.domain.exception.NegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +33,37 @@ FornecedorController {
         return ResponseEntity.ok(fornecedorService.BuscarFornecedorPorId(id));
     }
 
+    //alterado para evitar o logout por errar um campo
     @PostMapping
     @Operation(description = "Registra um novo fornecedor no banco", summary = "Salvar fornecedor")
-    public ResponseEntity<Long> salvar(@RequestBody FornecedorRequest fornecedor){
-        return ResponseEntity.ok(fornecedorService.SalvarFornecedor(fornecedor));
+    public ResponseEntity<?> salvar(@RequestBody FornecedorRequest fornecedor) {
+        try {
+            Long id = fornecedorService.SalvarFornecedor(fornecedor);
+            return ResponseEntity.ok(id);
+        } catch (NegocioException e) {
+            // Retorna 422 para erros de regra de negócio
+            return ResponseEntity.status(422).body(e.getMessage());
+        } catch (Exception e) {
+            // Retorna 500 para erros inesperados
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
     @Operation(description = "Registra a edição de um fornecedor através de seu ID", summary = "Editar fornecedor")
-    public  ResponseEntity<?> editar (@PathVariable Long id, @RequestBody FornecedorRequest fornecedor){
-        var alterarFornecedorResult = fornecedorService.AlterarFornecedor(id, fornecedor);
-        return alterarFornecedorResult ? ResponseEntity.ok("Atualizado com sucesso") : ResponseEntity.notFound().build();
+    public ResponseEntity<?> editar(@PathVariable Long id, @RequestBody FornecedorRequest fornecedor) {
+        try {
+            fornecedorService.AlterarFornecedor(id, fornecedor);
+            return ResponseEntity.ok("Atualizado com sucesso");
+        } catch (NegocioException e) {
+            // Se a mensagem contiver "não encontrado", retorna 404, senão 422
+            if (e.getMessage().contains("não encontrado")) {
+                return ResponseEntity.status(404).body(e.getMessage());
+            }
+            return ResponseEntity.status(422).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro inesperado ao atualizar fornecedor.");
+        }
     }
 
     @PutMapping("/{id}/AlterarStatus")

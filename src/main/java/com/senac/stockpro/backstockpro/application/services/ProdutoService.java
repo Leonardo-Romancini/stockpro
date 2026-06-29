@@ -3,6 +3,7 @@ package com.senac.stockpro.backstockpro.application.services;
 import com.senac.stockpro.backstockpro.application.DTO.*;
 import com.senac.stockpro.backstockpro.domain.entities.Produto;
 import com.senac.stockpro.backstockpro.domain.entities.Usuario;
+import com.senac.stockpro.backstockpro.domain.exception.NegocioException;
 import com.senac.stockpro.backstockpro.domain.repository.FornecedorRepository;
 import com.senac.stockpro.backstockpro.domain.repository.ProdutoRepository;
 import com.senac.stockpro.backstockpro.domain.repository.UsuarioRepository;
@@ -78,56 +79,44 @@ public class ProdutoService {
         return false;
     }
 
-    public boolean AlterarProduto(Long id, ProdutoRequest produto) {
+    public void AlterarProduto(Long id, ProdutoRequest produto) {
+        // Busca o produto ou lança exceção se não existir
+        var produtoBanco = produtoRepository.findById(id)
+                .orElseThrow(() -> new NegocioException("Produto com ID " + id + " não encontrado."));
 
-        try {
-            var produtoBanco = produtoRepository.findById(id).orElse(null);
-            if (produtoBanco != null) {
-                produtoBanco.setNome(produto.nome());
-                produtoBanco.setSKU(produto.SKU());
-                produtoBanco.setEstoque(produto.estoque());
-                produtoBanco.setPreco(produto.preco());
-                produtoBanco.setEstoqueMin(produto.estoqueMin());
+        // Atualiza os campos
+        produtoBanco.setNome(produto.nome());
+        produtoBanco.setSKU(produto.SKU());
+        produtoBanco.setEstoque(produto.estoque());
+        produtoBanco.setPreco(produto.preco());
+        produtoBanco.setEstoqueMin(produto.estoqueMin());
 
-                var fornecedor = fornecedorRepository.findById(produto.fornecedorId())
-                        .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + produto.fornecedorId()));
-                produtoBanco.setFornecedor(fornecedor);
+        // Valida o fornecedor
+        var fornecedor = fornecedorRepository.findById(produto.fornecedorId())
+                .orElseThrow(() -> new NegocioException("Fornecedor não encontrado com o ID: " + produto.fornecedorId()));
 
-                produtoRepository.save(produtoBanco);
-                return true;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return false;
+        produtoBanco.setFornecedor(fornecedor);
+
+        produtoRepository.save(produtoBanco);
     }
 
     public Long SalvarProduto(ProdutoRequest produto) {
-        try {
-            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            Produto novoProduto = new Produto(produto);
+        Produto novoProduto = new Produto(produto);
 
-            //Busca o Fornecedor real no banco de dados e vincula ao produto
-            if (produto.fornecedorId() != null) {
-                var fornecedor = fornecedorRepository.findById(produto.fornecedorId())
-                        .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + produto.fornecedorId()));
-                novoProduto.setFornecedor(fornecedor);
-            }
-
-            if (usuarioLogado != null && usuarioLogado.getId() != null) {
-                var usuario = usuarioRepository.findById(usuarioLogado.getId())
-                        .orElseThrow(() -> new RuntimeException("Usuário logado não encontrado no banco de dados!"));
-                novoProduto.setUsuario(usuario);
-            } else {
-                throw new RuntimeException("Usuário não está autenticado corretamente!");
-            }
-
-            //Salva o produto já com todos os relacionamentos gerenciados pelo JPA
-            return produtoRepository.save(novoProduto).getId();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (produto.fornecedorId() != null) {
+            var fornecedor = fornecedorRepository.findById(produto.fornecedorId())
+                    .orElseThrow(() -> new NegocioException("Fornecedor não encontrado com o ID: " + produto.fornecedorId()));
+            novoProduto.setFornecedor(fornecedor);
         }
+
+        var usuario = usuarioRepository.findById(usuarioLogado.getId())
+                .orElseThrow(() -> new NegocioException("Usuário logado não encontrado no banco de dados!"));
+
+        novoProduto.setUsuario(usuario);
+
+        return produtoRepository.save(novoProduto).getId();
     }
 
     public EstatisticaProdutoResponse obterEstatisticasProduto() {

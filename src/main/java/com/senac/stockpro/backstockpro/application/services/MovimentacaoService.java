@@ -5,6 +5,7 @@ import com.senac.stockpro.backstockpro.domain.entities.Movimentacao;
 import com.senac.stockpro.backstockpro.domain.entities.Produto;
 import com.senac.stockpro.backstockpro.domain.entities.Usuario;
 import com.senac.stockpro.backstockpro.domain.enuns.EnumMovimentacao;
+import com.senac.stockpro.backstockpro.domain.exception.NegocioException;
 import com.senac.stockpro.backstockpro.domain.repository.MovimentacaoRepository;
 import com.senac.stockpro.backstockpro.domain.repository.ProdutoRepository;
 import com.senac.stockpro.backstockpro.domain.repository.UsuarioRepository;
@@ -81,48 +82,35 @@ public class MovimentacaoService {
         }
     }
 
-    @Transactional //Impede que seja feita a mudança no estoque sem registrar a movimentação e vice e versa
+    @Transactional
     public Long SalvarMovimentacao(MovimentacaoRequest movimentacao) {
-        try {
-            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Movimentacao novaMovimentacao = new Movimentacao(movimentacao);
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Movimentacao novaMovimentacao = new Movimentacao(movimentacao);
 
-            //Parte que cuida de realizar a mudança da quantidade em estoque
-            if (movimentacao.produtoId() != null) {
-                Produto produto = produtoRepository.findById(movimentacao.produtoId())
-                        .orElseThrow(() -> new RuntimeException("Produto não encontrado com o ID: " + movimentacao.produtoId()));
-                /*
-                O if de cima procura o produto e e caso de certo a parte de baixo verifica o tipo de
-                movimentação e realiza a soma/subtração
-                */
-                if (movimentacao.tipo() == EnumMovimentacao.ENTRADA) {
-                    produto.setEstoque(produto.getEstoque() + movimentacao.quantidade());
-                } else if (movimentacao.tipo() == EnumMovimentacao.SAIDA) {
-                    if (produto.getEstoque() < movimentacao.quantidade()) {
-                        throw new RuntimeException("Estoque insuficiente para a saída solicitada.");
-                    }
-                    produto.setEstoque(produto.getEstoque() - movimentacao.quantidade());
-                }
+        // Busca o produto
+        Produto produto = produtoRepository.findById(movimentacao.produtoId())
+                .orElseThrow(() -> new NegocioException("Produto não encontrado com o ID: " + movimentacao.produtoId()));
 
-                produtoRepository.save(produto); // Persiste a nova quantidade
-                novaMovimentacao.setProduto(produto);
+        // Lógica de estoque
+        if (movimentacao.tipo() == EnumMovimentacao.ENTRADA) {
+            produto.setEstoque(produto.getEstoque() + movimentacao.quantidade());
+        } else if (movimentacao.tipo() == EnumMovimentacao.SAIDA) {
+            if (produto.getEstoque() < movimentacao.quantidade()) {
+                throw new NegocioException("Estoque insuficiente para a saída solicitada.");
             }
-
-            if (usuarioLogado != null && usuarioLogado.getId() != null) {
-                Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
-                        .orElseThrow(() -> new RuntimeException("Usuário logado não encontrado!"));
-                novaMovimentacao.setUsuario(usuario);
-            } else {
-                throw new RuntimeException("Usuário não está autenticado corretamente!");
-            }
-
-            return movimentacaoRepository.save(novaMovimentacao).getId();
-
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao processar movimentação", e);
+            produto.setEstoque(produto.getEstoque() - movimentacao.quantidade());
         }
+
+        produtoRepository.save(produto);
+        novaMovimentacao.setProduto(produto);
+
+        // Busca o usuário
+        Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
+                .orElseThrow(() -> new NegocioException("Usuário logado não encontrado!"));
+
+        novaMovimentacao.setUsuario(usuario);
+
+        return movimentacaoRepository.save(novaMovimentacao).getId();
     }
 
     public EstatisticaMovimentacaoResponse obterEstatisticasMovimentacao() {

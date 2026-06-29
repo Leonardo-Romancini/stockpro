@@ -5,6 +5,7 @@ import com.senac.stockpro.backstockpro.application.DTO.EstatisticaProdutoRespons
 import com.senac.stockpro.backstockpro.application.DTO.ProdutoRequest;
 import com.senac.stockpro.backstockpro.application.DTO.ProdutoResponse;
 import com.senac.stockpro.backstockpro.application.services.ProdutoService;
+import com.senac.stockpro.backstockpro.domain.exception.NegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +40,31 @@ public class ProdutoController {
 
     @PostMapping
     @Operation(description = "Registra um novo produto no banco", summary = "Salvar produto")
-    public ResponseEntity<Long> salvar(@RequestBody ProdutoRequest produto) {
-        return ResponseEntity.ok(produtoService.SalvarProduto(produto));
+    public ResponseEntity<?> salvar(@RequestBody ProdutoRequest produto) {
+        try {
+            Long id = produtoService.SalvarProduto(produto);
+            return ResponseEntity.ok(id);
+        } catch (NegocioException e) {
+            return ResponseEntity.status(422).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao salvar produto: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
     @Operation(description = "Registra a edição de um produto através de seu ID", summary = "Editar produto")
     public ResponseEntity<?> editar(@PathVariable Long id, @RequestBody ProdutoRequest produto) {
-
-        var alterarProdutoResult = produtoService.AlterarProduto(id, produto);
-
-        return alterarProdutoResult ? ResponseEntity.ok("Atualizado com sucesso") : ResponseEntity.notFound().build();
+        try {
+            produtoService.AlterarProduto(id, produto);
+            return ResponseEntity.ok("Atualizado com sucesso");
+        } catch (NegocioException e) {
+            if (e.getMessage().contains("não encontrado") && e.getMessage().contains("Produto")) {
+                return ResponseEntity.status(404).body(e.getMessage());
+            }
+            return ResponseEntity.status(422).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro inesperado ao atualizar produto.");
+        }
     }
 
     @PutMapping("/{id}/AlterarStatus")

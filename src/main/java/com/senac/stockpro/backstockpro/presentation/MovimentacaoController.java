@@ -4,6 +4,7 @@ import com.senac.stockpro.backstockpro.application.DTO.EstatisticaMovimentacaoRe
 import com.senac.stockpro.backstockpro.application.DTO.MovimentacaoRequest;
 import com.senac.stockpro.backstockpro.application.DTO.MovimentacaoResponse;
 import com.senac.stockpro.backstockpro.application.services.MovimentacaoService;
+import com.senac.stockpro.backstockpro.domain.exception.NegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,14 @@ public class MovimentacaoController {
 
     @PostMapping
     @Operation(description = "Registra uma nova movimentação no banco", summary = "Salvar movimentação")
-    public ResponseEntity<Long> salvar(@RequestBody MovimentacaoRequest movimentacao){
-        return ResponseEntity.ok(movimentacaoService.SalvarMovimentacao(movimentacao));
+    public ResponseEntity<?> salvar(@RequestBody MovimentacaoRequest movimentacao) {
+        try {
+            return ResponseEntity.ok(movimentacaoService.SalvarMovimentacao(movimentacao));
+        } catch (NegocioException e) {
+            return ResponseEntity.status(422).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro inesperado: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@ package com.senac.stockpro.backstockpro.application.services;
 import com.senac.stockpro.backstockpro.application.DTO.*;
 import com.senac.stockpro.backstockpro.domain.entities.Fornecedor;
 import com.senac.stockpro.backstockpro.domain.entities.Usuario;
+import com.senac.stockpro.backstockpro.domain.exception.NegocioException;
 import com.senac.stockpro.backstockpro.domain.repository.FornecedorRepository;
 import com.senac.stockpro.backstockpro.domain.repository.UsuarioRepository;
 import com.senac.stockpro.backstockpro.infra.external.OpenCNPJClient;
@@ -82,46 +83,43 @@ public class FornecedorService {
         return false;
     }
 
-    public boolean AlterarFornecedor(Long id, FornecedorRequest fornecedor) {
+    public void AlterarFornecedor(Long id, FornecedorRequest fornecedor) {
+        // Buscamos o fornecedor ou lançamos uma exceção de "Não encontrado"
+        var fornecedorBanco = fornecedorRepository.findById(id)
+                .orElseThrow(() -> new NegocioException("Fornecedor com ID " + id + " não encontrado."));
 
-        try {
-            var fornecedorBanco = fornecedorRepository.findById(id).orElse(null);
-            if (fornecedorBanco != null) {
-                fornecedorBanco.setRzsocial(fornecedor.rzsocial());
-                fornecedorBanco.setNomef(fornecedor.nomef());
-                fornecedorBanco.setCnpj(fornecedor.cnpj());
-                fornecedorBanco.setEmail(fornecedor.email());
-                fornecedorRepository.save(fornecedorBanco);
-                return true;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        // Validação de CNPJ (exemplo de regra de negócio)
+        if (!openCNPJClient.cnpjExiste(fornecedor.cnpj())) {
+            throw new NegocioException("O CNPJ fornecido não existe na base de dados.");
         }
-        return false;
+
+        // Atualiza os dados
+        fornecedorBanco.setRzsocial(fornecedor.rzsocial());
+        fornecedorBanco.setNomef(fornecedor.nomef());
+        fornecedorBanco.setCnpj(fornecedor.cnpj());
+        fornecedorBanco.setEmail(fornecedor.email());
+
+        fornecedorRepository.save(fornecedorBanco);
     }
 
     public Long SalvarFornecedor(FornecedorRequest fornecedor) {
-        try {
-            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Fornecedor novoFornecedor = new Fornecedor(fornecedor);
 
-            Fornecedor novoFornecedor = new Fornecedor(fornecedor);
-
-            //Validar se o cnpj inserido existe
-            if (!openCNPJClient.cnpjExiste(fornecedor.cnpj())) {
-                throw new RuntimeException("O CNPJ fornecido não existe na base de dados.");
-            }
-
-            if (usuarioLogado != null && usuarioLogado.getId() != null) {
-                Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
-                        .orElseThrow(() -> new RuntimeException("Usuário logado não encontrado!"));
-                novoFornecedor.setUsuario(usuario);
-            } else {
-                throw new RuntimeException("Usuário não está autenticado corretamente!");
-            }
-            return fornecedorRepository.save(novoFornecedor).getId();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        // Validação de negócio lança a exceção específica
+        if (!openCNPJClient.cnpjExiste(fornecedor.cnpj())) {
+            throw new NegocioException("O CNPJ fornecido não existe na base de dados.");
         }
+
+        if (usuarioLogado != null && usuarioLogado.getId() != null) {
+            Usuario usuario = usuarioRepository.findById(usuarioLogado.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuário logado não encontrado!"));
+            novoFornecedor.setUsuario(usuario);
+        } else {
+            throw new RuntimeException("Usuário não está autenticado corretamente!");
+        }
+
+        return fornecedorRepository.save(novoFornecedor).getId();
     }
 
     public Long SalvarFornecedorDesk(FornecedorDeskRequest fornecedor) {

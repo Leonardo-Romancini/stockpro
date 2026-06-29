@@ -13,14 +13,21 @@ public class OpenCNPJClient {
 
     public boolean cnpjExiste(String cnpj) {
         String cnpjLimpo = cnpj.replaceAll("[^0-9]", "");
-        String url = "https://api.opencnpj.org/v1/" + cnpjLimpo; // Ajuste a versão conforme a doc da API
+        String url = "https://api.opencnpj.org/" + cnpjLimpo;
 
         try {
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
-            HttpResponse<Void> response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "StockPro-App/1.0")
+                    .GET()
+                    .build();
 
+            HttpResponse<Void> response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
+            // Log para debugar:
+            System.out.println("Status da API CNPJ: " + response.statusCode());
             return response.statusCode() == 200;
         } catch (Exception e) {
+            e.printStackTrace(); // Ajuda a ver o erro no console
             return false;
         }
     }
