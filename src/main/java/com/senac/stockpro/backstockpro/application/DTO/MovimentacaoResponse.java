@@ -10,7 +10,7 @@ public record MovimentacaoResponse(
         EnumMovimentacao tipo,
         Integer quantidade,
         LocalDateTime data,
-        Long produto
+        String nome
 ) {
     public MovimentacaoResponse(Movimentacao movimentacao){
         this(
@@ -18,7 +18,7 @@ public record MovimentacaoResponse(
                 movimentacao.getTipo(),
                 movimentacao.getQuantidade(),
                 movimentacao.getData(),
-                movimentacao.getProduto() != null ? movimentacao.getProduto().getId() : null
+                movimentacao.getProduto() != null ? movimentacao.getProduto().getNome() : null
         );
     }
 }

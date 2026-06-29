@@ -1,3 +1,4 @@
+import { EstatisticaFornecedor } from "../types/estatisticaFornecedor";
 import { Fornecedor } from "../types/fornecedores";
 import api from "./api";
 
@@ -44,4 +45,16 @@ export async function editarFornecedor(fornecedor: Fornecedor) {
         if (dadosResult.status === 200) {
           alert("Fornecedor atualizado com sucesso!")
         }
+}
+
+export async function buscarEstatisticasFornecedor(): Promise<EstatisticaFornecedor | null> {
+    try {
+        const response = await api.get<EstatisticaFornecedor>('/fornecedores/estatisticas');
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Erro ao buscar estatísticas de fornecedores:", error);
+    }
+    return null;
 }

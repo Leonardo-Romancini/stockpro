@@ -8,6 +8,7 @@ export class Produto{
         public estoqueMin: number,
         public fornecedorId: number|null,
         public status: string,
+        public nomeFornecedor?: string
     ) {}
 }
 

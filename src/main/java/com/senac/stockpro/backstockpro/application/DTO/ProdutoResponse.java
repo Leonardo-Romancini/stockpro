@@ -10,7 +10,7 @@ public record ProdutoResponse(
         Integer estoque,
         Double preco,
         Integer estoqueMin,
-        Long fornecedor,
+        String rzsocial,
         String status
 ) {
     public ProdutoResponse(Produto produto){
@@ -21,7 +21,7 @@ public record ProdutoResponse(
                 produto.getEstoque(),
                 produto.getPreco(),
                 produto.getEstoqueMin(),
-                produto.getFornecedor() != null ? produto.getFornecedor().getId() : null,
+                produto.getFornecedor() != null ? produto.getFornecedor().getRzsocial() : null,
                 produto.getStatus().toString()
         );
     }

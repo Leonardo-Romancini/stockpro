@@ -65,4 +65,9 @@ public class ProdutoController {
     public ResponseEntity<EstatisticaProdutoResponse> obterEstatisticas() {
         return ResponseEntity.ok(produtoService.obterEstatisticasProduto());
     }
+
+    @GetMapping("/estoque-critico")
+    public ResponseEntity<List<ProdutoResponse>> listarEstoqueCritico() {
+        return ResponseEntity.ok(produtoService.listarProdutosEstoqueCritico());
+    }
 }

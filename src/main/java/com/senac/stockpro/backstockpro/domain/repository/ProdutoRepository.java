@@ -29,4 +29,11 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("SELECT COUNT(p) FROM Produto p WHERE p.usuario.id = :usuarioId AND p.estoque <= p.estoqueMin")
     long countEstoqueCriticoUsuario(@Param("usuarioId") Long usuarioId);
+
+    @Query("SELECT p FROM Produto p WHERE p.estoque <= p.estoqueMin")
+    List<Produto> findProdutosEstoqueCriticoAdmin();
+
+    // Lista para Usuário Comum (apenas os produtos dele em estoque crítico)
+    @Query("SELECT p FROM Produto p WHERE p.usuario.id = :usuarioId AND p.estoque <= p.estoqueMin")
+    List<Produto> findProdutosEstoqueCriticoUsuario(@Param("usuarioId") Long usuarioId);
 }

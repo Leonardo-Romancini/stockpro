@@ -59,7 +59,7 @@ FornecedorController {
         return ResponseEntity.ok(fornecedorService.SalvarFornecedorDesk(fornecedor));
     }
 
-    @GetMapping("/total")
+    @GetMapping("/estatisticas")
     @Operation(description = "Retorna a contagem de fornecedores (Total para Admin, ou por usuário)", summary = "Contar fornecedores")
     public ResponseEntity<EstatisticaFornecedorResponse> contarFornecedores() {
         EstatisticaFornecedorResponse resposta = fornecedorService.contarFornecedores();

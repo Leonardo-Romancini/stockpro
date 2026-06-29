@@ -30,8 +30,6 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
 
   const handleSalvar = async () => {
     try {
-      // Como a classe Usuario tem o método constructor, ao enviar para o back-end,
-      // ele respeitará o objeto atual.
       if (usuarioExistente) {
         await editarUsuario(usuario);
       } else {
@@ -43,7 +41,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
     }
   };
 
-  // Estilos reutilizáveis para manter o padrão StockPro
+
   const labelStyle = "text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1";
   const inputStyle = "w-full px-5 py-4 bg-zinc-50 border-2 border-zinc-100 rounded-2xl text-zinc-700 font-bold outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-zinc-300 shadow-sm";
 

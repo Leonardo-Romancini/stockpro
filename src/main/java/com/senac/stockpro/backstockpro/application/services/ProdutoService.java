@@ -146,6 +146,26 @@ public class ProdutoService {
 
         return new EstatisticaProdutoResponse(total, criticos);
     }
+
+    public List<ProdutoResponse> listarProdutosEstoqueCritico() {
+        try {
+            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            List<Produto> lista;
+
+            if ("ROLE_ADMIN".equals(usuarioLogado.getRole())) {
+                lista = produtoRepository.findProdutosEstoqueCriticoAdmin();
+            } else {
+                lista = produtoRepository.findProdutosEstoqueCriticoUsuario(usuarioLogado.getId());
+            }
+
+            return lista.stream()
+                    .map(ProdutoResponse::new)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar produtos com estoque crítico", e);
+        }
+    }
 }
 
 

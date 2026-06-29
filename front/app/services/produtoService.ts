@@ -1,3 +1,4 @@
+import { EstatisticaProduto } from "../types/estatisticaProduto";
 import { Produto } from "../types/produtos";
 import api from "./api";
 
@@ -43,4 +44,28 @@ export async function editarProduto(produto: Produto) {
 export async function produtoPorId(id: number){
     const response = await api.get<Produto>('/produtos/' + id)
             return response.data;
+}
+
+export async function buscarEstatisticasProduto(): Promise<EstatisticaProduto | null> {
+    try {
+        const response = await api.get<EstatisticaProduto>('/produtos/estatisticas');
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Erro ao buscar estatísticas de produtos:", error);
+    }
+    return null;
+}
+
+export async function buscarListaProdutosEstoqueCritico(): Promise<Produto[]> {
+    try {
+        const response = await api.get<Produto[]>('/produtos/estoque-critico');
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Erro ao buscar produtos com estoque crítico:", error);
+    }
+    return [];
 }

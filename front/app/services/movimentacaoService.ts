@@ -1,3 +1,4 @@
+import { EstatisticaMovimentacao } from "../types/estatisticaMovimentacao";
 import { Movimentacao } from "../types/movimentacoes";
 import api from "./api";
 
@@ -32,4 +33,16 @@ export async function pesquisarMovimentacoes(pesquisa: string): Promise<Moviment
         return response.data;
     }
     return [];
+}
+
+export async function buscarEstatisticasMovimentacao(): Promise<EstatisticaMovimentacao | null> {
+    try {
+        const response = await api.get<EstatisticaMovimentacao>('/movimentacoes/estatisticas');
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Erro ao buscar estatísticas de movimentação:", error);
+    }
+    return null;
 }

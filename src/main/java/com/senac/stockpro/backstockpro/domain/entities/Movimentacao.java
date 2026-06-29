@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "movimentacao")
@@ -19,7 +20,7 @@ public class Movimentacao {
     public Movimentacao(MovimentacaoRequest movimentacao){
         this.tipo = movimentacao.tipo();
         this.quantidade = movimentacao.quantidade();
-        this.data = movimentacao.data();
+        this.data = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     @Id
