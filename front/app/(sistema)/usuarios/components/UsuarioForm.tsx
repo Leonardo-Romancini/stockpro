@@ -102,7 +102,7 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
               </div>
 
               <div className="space-y-2">
-                <label className={labelStyle}>Documento (CNPJ/CPF)</label>
+                <label className={labelStyle}>Documento (CNPJ)</label>
                 <input
                   type="text"
                   required

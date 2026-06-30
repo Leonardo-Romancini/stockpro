@@ -43,44 +43,44 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
         }
     }
 
-    const handleChange = (
-        campo: 'nome' | 'SKU' | 'estoque' | 'preco' | 'estoqueMin' | 'fornecedorId',
-        valor: string
-    ) => {
+    const handleChange = (campo: 'nome' | 'SKU' | 'estoque' | 'preco' | 'estoqueMin' | 'fornecedorId', valor: string) => {
+        //Converte string vazia para 0, caso contrário converte para o número
+        const valorNumerico = valor === '' ? 0 : Number(valor);
+
         setProduto(prev =>
             new Produto(
                 prev.id,
                 campo === 'nome' ? valor : prev.nome,
                 campo === 'SKU' ? valor : prev.SKU,
-                campo === 'estoque' ? Number(valor) : prev.estoque,
-                campo === 'preco' ? Number(valor) : prev.preco,
-                campo === 'estoqueMin' ? Number(valor) : prev.estoqueMin,
+                campo === 'estoque' ? valorNumerico : prev.estoque,
+                campo === 'preco' ? valorNumerico : prev.preco,
+                campo === 'estoqueMin' ? valorNumerico : prev.estoqueMin,
                 campo === 'fornecedorId' ? Number(valor) : prev.fornecedorId,
                 prev.status,
-                prev.nomeFornecedor 
+                prev.nomeFornecedor
             )
         );
     };
 
-const handleSalvar = async () => {
-    try {
-        //Passa os campos do produto para o produtoParaEnviar removendo o nomeFornecedor
-        const { nomeFornecedor, ...produtoParaEnviar } = produto;
-        
-        if(produtoExistente){
-            await editarProduto(produtoParaEnviar as Produto);
-        } else {
-            await salvarProduto(produtoParaEnviar as Produto);
+    const handleSalvar = async () => {
+        try {
+            //Passa os campos do produto para o produtoParaEnviar removendo o nomeFornecedor
+            const { nomeFornecedor, ...produtoParaEnviar } = produto;
+
+            if (produtoExistente) {
+                await editarProduto(produtoParaEnviar as Produto);
+            } else {
+                await salvarProduto(produtoParaEnviar as Produto);
+            }
+
+            if (produto.fornecedorId) {
+                dispatch(registrarUso({ id: Number(produto.fornecedorId) }));
+            }
+            router.push("/produtos");
+        } catch (error) {
+            alert("Erro ao salvar o produto.");
         }
-        
-        if (produto.fornecedorId) {
-            dispatch(registrarUso({ id: Number(produto.fornecedorId) }));
-        }
-        router.push("/produtos");
-    } catch (error) {
-        alert("Erro ao salvar o produto.");
     }
-}
 
     // Estilo comum para os inputs
     const inputStyle = "w-full px-5 py-4 bg-zinc-50 border-2 border-zinc-100 rounded-2xl text-zinc-700 font-bold outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-zinc-300";
@@ -135,7 +135,8 @@ const handleSalvar = async () => {
                                     type="number"
                                     required
                                     className={inputStyle}
-                                    value={produto.estoque ?? 0}
+                                    // Se for 0, mostra vazio. Se tiver valor, mostra o valor.
+                                    value={produto.estoque === 0 ? '' : produto.estoque}
                                     onChange={(e) => handleChange('estoque', e.target.value)}
                                     placeholder="0"
                                 />
@@ -148,7 +149,7 @@ const handleSalvar = async () => {
                                     required
                                     step="0.01"
                                     className={inputStyle}
-                                    value={produto.preco ?? 0}
+                                    value={produto.preco === 0 ? '' : produto.preco}
                                     onChange={(e) => handleChange('preco', e.target.value)}
                                     placeholder="0.00"
                                 />
@@ -160,7 +161,7 @@ const handleSalvar = async () => {
                                     type="number"
                                     required
                                     className={inputStyle}
-                                    value={produto.estoqueMin ?? 0}
+                                    value={produto.estoqueMin === 0 ? '' : produto.estoqueMin}
                                     onChange={(e) => handleChange('estoqueMin', e.target.value)}
                                     placeholder="Ex: 5"
                                 />

@@ -40,32 +40,35 @@ export default function MovimentacaoForm() {
     }
 
     const handleChange = (campo: 'tipo' | 'quantidade' | 'produtoId', valor: string) => {
+        // Se o valor for vazio, transformamos em 0 para não quebrar a lógica de número
+        const valorNumerico = valor === '' ? 0 : Number(valor);
+
         setMovimentacao(prev =>
             new Movimentacao(
                 prev.id,
                 campo === 'tipo' ? valor : prev.tipo,
-                campo === 'quantidade' ? Number(valor) : prev.quantidade,
+                campo === 'quantidade' ? valorNumerico : prev.quantidade,
                 prev.data,
                 campo === 'produtoId' ? Number(valor) : prev.produtoId,
-                prev.nomeProduto // Preserva o nome do produto durante a edição
+                prev.nomeProduto
             )
         );
     };
 
     const handleSalvar = async () => {
-    try {
-        const { nomeProduto, ...movimentacaoParaEnviar } = movimentacao;
-        
-        await salvarMovimentacao(movimentacaoParaEnviar as Movimentacao);
-        
-        if (movimentacao.produtoId) {
-            dispatch(registrarUso({ id: Number(movimentacao.produtoId) }));
+        try {
+            const { nomeProduto, ...movimentacaoParaEnviar } = movimentacao;
+
+            await salvarMovimentacao(movimentacaoParaEnviar as Movimentacao);
+
+            if (movimentacao.produtoId) {
+                dispatch(registrarUso({ id: Number(movimentacao.produtoId) }));
+            }
+            router.push("/movimentacao");
+        } catch (error) {
+            alert("Erro ao salvar a movimentação.");
         }
-        router.push("/movimentacao");
-    } catch (error) {
-        alert("Erro ao salvar a movimentação.");
     }
-}
 
     const inputStyle = "w-full px-5 py-4 bg-zinc-50 border-2 border-zinc-100 rounded-2xl text-zinc-700 font-bold outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-zinc-300";
     const labelStyle = "text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1";
@@ -107,7 +110,8 @@ export default function MovimentacaoForm() {
                                     required
                                     min="1"
                                     className={inputStyle}
-                                    value={movimentacao.quantidade ?? 0}
+                                    // Se for 0, mostra vazio. Se tiver valor (ex: 50), mostra o número.
+                                    value={movimentacao.quantidade === 0 ? '' : movimentacao.quantidade}
                                     onChange={(e) => handleChange('quantidade', e.target.value)}
                                     placeholder="Ex: 50"
                                 />
