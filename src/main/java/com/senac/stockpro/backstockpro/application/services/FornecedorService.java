@@ -88,12 +88,11 @@ public class FornecedorService {
         var fornecedorBanco = fornecedorRepository.findById(id)
                 .orElseThrow(() -> new NegocioException("Fornecedor com ID " + id + " não encontrado."));
 
-        // Validação de CNPJ (exemplo de regra de negócio)
         if (!openCNPJClient.cnpjExiste(fornecedor.cnpj())) {
             throw new NegocioException("O CNPJ fornecido não existe na base de dados.");
         }
 
-        // Atualiza os dados
+
         fornecedorBanco.setRzsocial(fornecedor.rzsocial());
         fornecedorBanco.setNomef(fornecedor.nomef());
         fornecedorBanco.setCnpj(fornecedor.cnpj());
@@ -106,7 +105,7 @@ public class FornecedorService {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Fornecedor novoFornecedor = new Fornecedor(fornecedor);
 
-        // Validação de negócio lança a exceção específica
+        //Validação de negócio lança a exceção específica para não causar logout
         if (!openCNPJClient.cnpjExiste(fornecedor.cnpj())) {
             throw new NegocioException("O CNPJ fornecido não existe na base de dados.");
         }

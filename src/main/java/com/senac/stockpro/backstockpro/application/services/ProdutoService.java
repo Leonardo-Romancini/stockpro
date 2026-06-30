@@ -80,18 +80,15 @@ public class ProdutoService {
     }
 
     public void AlterarProduto(Long id, ProdutoRequest produto) {
-        // Busca o produto ou lança exceção se não existir
         var produtoBanco = produtoRepository.findById(id)
                 .orElseThrow(() -> new NegocioException("Produto com ID " + id + " não encontrado."));
 
-        // Atualiza os campos
         produtoBanco.setNome(produto.nome());
         produtoBanco.setSKU(produto.SKU());
         produtoBanco.setEstoque(produto.estoque());
         produtoBanco.setPreco(produto.preco());
         produtoBanco.setEstoqueMin(produto.estoqueMin());
 
-        // Valida o fornecedor
         var fornecedor = fornecedorRepository.findById(produto.fornecedorId())
                 .orElseThrow(() -> new NegocioException("Fornecedor não encontrado com o ID: " + produto.fornecedorId()));
 
