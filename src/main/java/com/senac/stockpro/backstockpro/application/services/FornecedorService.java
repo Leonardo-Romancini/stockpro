@@ -84,7 +84,6 @@ public class FornecedorService {
     }
 
     public void AlterarFornecedor(Long id, FornecedorRequest fornecedor) {
-        // Buscamos o fornecedor ou lançamos uma exceção de "Não encontrado"
         var fornecedorBanco = fornecedorRepository.findById(id)
                 .orElseThrow(() -> new NegocioException("Fornecedor com ID " + id + " não encontrado."));
 

@@ -33,7 +33,7 @@ FornecedorController {
         return ResponseEntity.ok(fornecedorService.BuscarFornecedorPorId(id));
     }
 
-    //alterado para evitar o logout por errar um campo
+    //Alterado para evitar o logout por errar um campo
     @PostMapping
     @Operation(description = "Registra um novo fornecedor no banco", summary = "Salvar fornecedor")
     public ResponseEntity<?> salvar(@RequestBody FornecedorRequest fornecedor) {
@@ -41,10 +41,10 @@ FornecedorController {
             Long id = fornecedorService.SalvarFornecedor(fornecedor);
             return ResponseEntity.ok(id);
         } catch (NegocioException e) {
-            // Retorna 422 para erros de regra de negócio
+            //Retorna 422 para erros de regra de negócio
             return ResponseEntity.status(422).body(e.getMessage());
         } catch (Exception e) {
-            // Retorna 500 para erros inesperados
+            // Retorna 500 para outros  erros
             return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
         }
     }
@@ -56,7 +56,7 @@ FornecedorController {
             fornecedorService.AlterarFornecedor(id, fornecedor);
             return ResponseEntity.ok("Atualizado com sucesso");
         } catch (NegocioException e) {
-            // Se a mensagem contiver "não encontrado", retorna 404, senão 422
+            //Se a mensagem tiver "não encontrado", retorna 404, senão 422
             if (e.getMessage().contains("não encontrado")) {
                 return ResponseEntity.status(404).body(e.getMessage());
             }

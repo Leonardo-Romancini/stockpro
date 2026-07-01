@@ -71,7 +71,7 @@ public class MovimentacaoService {
         try {
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            // Busca no repositório filtrando pelo ID do usuário e pelo nome do produto
+            //Busca no repositório filtrando pelo ID do usuário e pelo nome do produto
             List<Movimentacao> movimentacoes = movimentacaoRepository
                     .findByUsuario_IdAndProduto_NomeContainingIgnoreCaseOrderByIdAsc(usuarioLogado.getId(), pesquisa);
             return movimentacoes.stream()
