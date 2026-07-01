@@ -18,7 +18,7 @@ export default function LoginPage() {
     const senha = formData.get("senha") as string;
 
     try {
-        // 1. Faz o login e recebe o token + role
+        //Faz o login e recebe o token + role
         const loginResult = await loginService({ email, senha });
 
         if (!loginResult.token) {
@@ -26,16 +26,16 @@ export default function LoginPage() {
             return;
         }
 
-        // 2. Salva o token no Redux/Contexto
+        //Salva o token no Redux/Contexto
         dispatch(setToken({ token: loginResult.token }));
 
-        // 3. Busca o usuário logado (este objeto já contém a 'role' que configuramos no Back-end)
+        //Busca o usuário logado
         const usuarioCompleto = await buscarUsuarioLogado(loginResult.token);
 
-        // 4. Salva o objeto usuário completo no Redux/Contexto
+        //Salva o objeto usuário completo no Redux/Contexto
         dispatch(setUsuario({ usuario: usuarioCompleto }));
 
-        // 5. Redireciona
+        //Redireciona
         router.push("/home");
 
     } catch (error) {

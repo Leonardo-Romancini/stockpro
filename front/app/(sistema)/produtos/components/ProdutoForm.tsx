@@ -82,7 +82,6 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
         }
     }
 
-    // Estilo comum para os inputs
     const inputStyle = "w-full px-5 py-4 bg-zinc-50 border-2 border-zinc-100 rounded-2xl text-zinc-700 font-bold outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-zinc-300";
     const labelStyle = "text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1";
 
@@ -135,7 +134,6 @@ export default function ProdutoForm({ produtoExistente }: ProdutoFormProps) {
                                     type="number"
                                     required
                                     className={inputStyle}
-                                    // Se for 0, mostra vazio. Se tiver valor, mostra o valor.
                                     value={produto.estoque === 0 ? '' : produto.estoque}
                                     onChange={(e) => handleChange('estoque', e.target.value)}
                                     placeholder="0"

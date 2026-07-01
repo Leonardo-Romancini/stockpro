@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { editarFornecedor, salvarFornecedor } from "@/app/services/fornecedorService";
-import { buscarDadosPorCnpj } from "@/app/services/openCNPJService"; // Certifique-se de importar seu service
+import { buscarDadosPorCnpj } from "@/app/services/openCNPJService";
 
 export default function FornecedorForm({ fornecedorExistente }: FornecedorFormProps) {
     const [fornecedor, setFornecedor] = useState<Fornecedor>(fornecedorExistente || new Fornecedor(null, '', '', '', '', "ATIVO"))

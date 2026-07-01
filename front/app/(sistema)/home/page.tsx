@@ -43,7 +43,6 @@ export default function Home() {
     return (
         <main className="p-8 bg-zinc-50 min-h-screen space-y-12">
             
-            {/* GRUPO 1: VISÃO GERAL */}
             <section>
                 <h2 className="text-lg font-black text-zinc-900 mb-6 uppercase italic tracking-tighter">Visão Geral</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -53,7 +52,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* GRUPO 2: OPERACIONAL */}
             <section>
                 <h2 className="text-lg font-black text-zinc-900 mb-6 uppercase italic tracking-tighter">Dados Operacionais</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -63,7 +61,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* LISTA DE CRÍTICOS */}
             <section>
                 <h2 className="text-lg font-black text-zinc-900 mb-6 uppercase italic tracking-tighter">Produtos em Estoque Crítico</h2>
                 <div className="bg-white rounded-[2rem] border-2 border-zinc-200 shadow-sm overflow-hidden">

@@ -33,7 +33,7 @@ export default function Movimentacoes() {
 
     const handlePesquisar = async () => {
         try {
-            // Se a barra estiver vazia, recarrega a lista completa, senão busca o termo
+            //Se a barra estiver vazia, recarrega a lista completa, senão busca o que está escrito
             if (pesquisa.trim() === "") {
                 await carregarDados();
             } else {
@@ -50,7 +50,6 @@ export default function Movimentacoes() {
         <main className="min-h-screen flex flex-col font-sans antialiased bg-zinc-50">
             <section className="flex-1 w-full max-w-7xl mx-auto px-6 py-12 space-y-8">
 
-                {/* HEADER */}
                 <div className="w-full bg-zinc-950 rounded-[2rem] p-8 md:p-10 border-b border-zinc-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="space-y-1">
                         <h1 className="text-4xl font-black text-white uppercase italic tracking-tighter">
@@ -69,7 +68,6 @@ export default function Movimentacoes() {
                     </Link>
                 </div>
 
-                {/* PESQUISA */}
                 <div className="flex gap-4">
                     <input
                         type="text"
@@ -87,7 +85,6 @@ export default function Movimentacoes() {
                     </button>
                 </div>
 
-                {/* LISTA */}
                 <div className="bg-white rounded-[2rem] border-2 border-zinc-200 shadow-sm overflow-hidden">
                     <Listas
                         dados={dadosFormatados}

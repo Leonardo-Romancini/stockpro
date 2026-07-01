@@ -3,18 +3,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 
-// Interface para o estado do slice
+//Interface para o estado do slice
 export interface FornecedorHistoricoState {
     recentes: number[];
 }
 
 const COOKIE_NAME = 'recentes_fornecedores';
 
-// Recuperação inicial dos dados direto dos Cookies
+//Recuperação inicial dos dados direto dos Cookies
 const salvosRecover = Cookies.get(COOKIE_NAME);
 
 const initialState: FornecedorHistoricoState = {
-    // Se achar os ids, passa de string para array. Se não, inicia vazio.
+    //Se achar os ids, passa de string para array. Se não, inicia vazio.
     recentes: salvosRecover ? JSON.parse(salvosRecover) as number[] : []
 };
 
@@ -26,16 +26,16 @@ const historicoSlice = createSlice({
         registrarUso: (state, action: PayloadAction<{ id: number }>) => {
             const idNovo = action.payload.id;
 
-            // 1. Remove o id se ele já existir na lista (evita duplicatas)
+            //Remove o id se ele já existir na lista (evita duplicatas)
             const filtrados = state.recentes.filter(item => item !== idNovo);
 
-            // 2. Coloca o id novo na frente e limita aos 3 primeiros itens
+            //Coloca o id novo na frente e limita aos 3 primeiros itens
             const novosRecentes = [idNovo, ...filtrados].slice(0, 3);
 
-            // 3. Atualiza o estado do Redux
+            //Atualiza o estado do Redux
             state.recentes = novosRecentes;
 
-            // 4. Salva a nova lista nos Cookies por 7 dias
+            //Salva a nova lista nos Cookies por 7 dias
             Cookies.set(COOKIE_NAME, JSON.stringify(novosRecentes), { expires: 7 });
         },
     }

@@ -4,7 +4,7 @@ import { Fornecedor } from "../types/fornecedores";
 export async function buscarDadosPorCnpj(cnpj: string): Promise<Partial<Fornecedor> | null> {
     const cnpjLimpo = cnpj.replace(/\D/g, '');
     
-    // Validação básica de tamanho (CNPJ deve ter 14 dígitos)
+    //Validação de tamanho
     if (cnpjLimpo.length !== 14) {
         console.warn("CNPJ inválido: deve conter 14 dígitos.");
         return null;

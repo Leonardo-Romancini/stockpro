@@ -40,7 +40,7 @@ export default function MovimentacaoForm() {
     }
 
     const handleChange = (campo: 'tipo' | 'quantidade' | 'produtoId', valor: string) => {
-        // Se o valor for vazio, transformamos em 0 para não quebrar a lógica de número
+        //Converte para 0 caso o valor seja vazio para não dar problema
         const valorNumerico = valor === '' ? 0 : Number(valor);
 
         setMovimentacao(prev =>
