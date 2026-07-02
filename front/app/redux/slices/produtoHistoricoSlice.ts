@@ -7,7 +7,6 @@ export interface ProdutoHistoricoState {
     recentes: number[];
 }
 
-//Chave diferente para salvar os IDs dos produtos separadamente
 const COOKIE_NAME = 'recentes_produtos';
 
 const salvosRecover = Cookies.get(COOKIE_NAME);
@@ -17,7 +16,7 @@ const initialState: ProdutoHistoricoState = {
 };
 
 const produtoHistoricoSlice = createSlice({
-    name: 'produtoHistorico', // Nome do escopo alterado
+    name: 'produtoHistorico', 
     initialState,
     reducers: {
         registrarUsoProduto: (state, action: PayloadAction<{ id: number }>) => {
