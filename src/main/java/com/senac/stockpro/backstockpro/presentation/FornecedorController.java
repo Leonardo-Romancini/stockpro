@@ -41,7 +41,7 @@ FornecedorController {
             Long id = fornecedorService.SalvarFornecedor(fornecedor);
             return ResponseEntity.ok(id);
         } catch (NegocioException e) {
-            //Retorna 422 para erros de regra de negócio
+            //Retorna 422 para erros de validação de cnpj
             return ResponseEntity.status(422).body(e.getMessage());
         } catch (Exception e) {
             // Retorna 500 para outros  erros
