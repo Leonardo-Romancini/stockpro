@@ -114,8 +114,8 @@ public class UsuarioService {
     }
 
     public String buscarRolePorEmail(String email) {
-        return usuarioRepository.findByEmail(email) // Certifique-se de ter este método no repositório
+        return usuarioRepository.findByEmail(email)
                 .map(Usuario::getRole)
-                .orElse("ROLE_USER"); // Valor padrão caso não encontre
+                .orElse("ROLE_USER");
     }
 }

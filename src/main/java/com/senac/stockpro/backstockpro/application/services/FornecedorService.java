@@ -104,7 +104,7 @@ public class FornecedorService {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Fornecedor novoFornecedor = new Fornecedor(fornecedor);
 
-        //Validação de negócio lança a exceção específica para não causar logout
+        //Validação de cnpj lança a exceção específica para não causar logout
         if (!openCNPJClient.cnpjExiste(fornecedor.cnpj())) {
             throw new NegocioException("O CNPJ fornecido não existe na base de dados.");
         }
