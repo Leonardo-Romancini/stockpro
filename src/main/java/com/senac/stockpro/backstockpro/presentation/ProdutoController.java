@@ -82,6 +82,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/estoque-critico")
+    @Operation(description = "Realiza uma listagem dos produtos com estoque igual ou menor do que a quantidade mínima do usuário no banco", summary = "Listagem todos")
     public ResponseEntity<List<ProdutoResponse>> listarEstoqueCritico() {
         return ResponseEntity.ok(produtoService.listarProdutosEstoqueCritico());
     }
